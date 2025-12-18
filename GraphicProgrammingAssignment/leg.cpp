@@ -106,20 +106,20 @@ void drawLegDetails(float w, float h, float d)
 
     // Left side armor
     glPushMatrix();
-    glTranslatef(-x - 0.08f, 0.0f, 0.0f);
-    drawCuboid(0.08f, h * 0.8f, d * 0.8f);
+    glTranslatef(-x - 0.05f, 0.0f, 0.0f);
+    drawCuboid(0.12f, h * 0.85f, d * 0.9f);
     glPopMatrix();
 
     // Right side armor
     glPushMatrix();
-    glTranslatef(x + 0.08f, 0.0f, 0.0f);
-    drawCuboid(0.08f, h * 0.8f, d * 0.8f);
+    glTranslatef(x + 0.05f, 0.0f, 0.0f);
+    drawCuboid(0.12f, h * 0.85f, d * 0.9f);
     glPopMatrix();
 
     //shin
     glPushMatrix();
     glTranslatef(0.0f, 0.0f, d * 0.5f + 0.05f);
-    drawCuboid(w * 0.6f, h * 0.6f, 0.08f);
+    drawCuboid(w * 0.6f, h * 0.7f, 0.08f);
     glPopMatrix();
 
     glDisable(GL_TEXTURE_2D);
@@ -243,8 +243,8 @@ void drawSingleLeg(float xOffset)
     // upper leg
     glPushMatrix();
     glTranslatef(0.0f, -0.4f, 0.0f);
-    drawSegmentedLeg(0.3f, 0.8f, 0.3f, 6);
-    drawLegDetails(0.3f, 0.8f, 0.3f);
+    drawSegmentedLeg(0.4f, 0.65f, 0.4f, 5);
+    drawLegDetails(0.4f, 0.65f, 0.4f);
 
     glDisable(GL_TEXTURE_2D);
 
@@ -253,26 +253,26 @@ void drawSingleLeg(float xOffset)
 
     glPushMatrix();
     glTranslatef(0.0f, -0.3f, 0.20f);
-    drawCuboid(0.1, 0.3f, 0.05f);
+    drawCuboid(0.1, 0.1f, 0.05f);
 
     glDisable(GL_TEXTURE_2D);
 
     glPopMatrix();
 
-    // sphere
-    glPushMatrix();
-    glTranslatef(0.0f, 0.2f, 0.0f);   // center of armor
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, steelTexture); 
-    drawCoreSphere(0.2f);
-    glDisable(GL_TEXTURE_2D);
-    glPopMatrix();
+    //// sphere
+    //glPushMatrix();
+    //glTranslatef(0.0f, 0.12f, 0.0f);   // center of armor
+    //glEnable(GL_TEXTURE_2D);
+    //glBindTexture(GL_TEXTURE_2D, steelTexture); 
+    //drawCoreSphere(0.16f);
+    //glDisable(GL_TEXTURE_2D);
+    //glPopMatrix();
 
     // knee joint
     glPushMatrix();
-    glTranslatef(0.0f, -0.48f, 0.0f);
+    glTranslatef(0.8f, -0.48f, 0.0f);
     glPopMatrix();
-    glTranslatef(0.0f, -0.4f, 0.0f);
+    glTranslatef(0.0f, -0.32f, 0.0f);
     glRotatef(kneeRotation + kneeAnim, 1, 0, 0);
 
     glEnable(GL_TEXTURE_2D);
@@ -281,12 +281,12 @@ void drawSingleLeg(float xOffset)
     // pistons
     glPushMatrix();
     glTranslatef(0.15f, -0.3f, 0);
-    drawPiston(0.4f);
+    drawPiston(0.55f);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-0.15f, -0.3f, 0);
-    drawPiston(0.4f);
+    drawPiston(0.55f);
     glPopMatrix();
 
     glEnable(GL_TEXTURE_2D);
@@ -294,16 +294,16 @@ void drawSingleLeg(float xOffset)
 
     // lower leg
     glTranslatef(0.0f, -0.45f, 0.0f);
-    drawCuboid(0.25f, 0.9f, 0.25f);
-    drawVerticalRibs(0.25f, 0.9f, 0.25f, 4);
+    drawCuboid(0.22f, 1.0f, 0.22f);
+    drawVerticalRibs(0.22f, 1.0f, 0.22f, 5);
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
 
     // foot
-    glTranslatef(0.0f, -0.55f, 0.15f);
-    drawCuboid(0.45f, 0.2f, 0.7f);
-    drawFootDetails(0.45f, 0.15f, 0.7f);
+    glTranslatef(0.0f, -0.55f, 0.25f);
+    drawCuboid(0.55f, 0.22f, 0.85f);
+    drawFootDetails(0.55f, 0.18f, 0.85f);
 
     glDisable(GL_TEXTURE_2D);
 
@@ -314,10 +314,10 @@ void drawSingleLeg(float xOffset)
 void drawRobotLegs()
 {
     // Left leg
-    drawSingleLeg(-0.35f);
+    drawSingleLeg(-0.4f);
 
     // Right leg
-    drawSingleLeg(0.35f);
+    drawSingleLeg(0.4f);
 
     if (isWalking)
     {

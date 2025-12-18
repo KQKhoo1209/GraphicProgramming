@@ -221,6 +221,16 @@ void InputManager::Update()
 		camZ += sin(yawRad) * moveSpeed;
 	}
 
+	if (IsKeyPressed('R'))
+	{
+		camY += moveSpeed;
+	}
+
+	if (IsKeyPressed('F'))
+	{
+		camY -= moveSpeed;
+	}
+
 	if (IsKeyPressed('U'))
 	{
 		diffuseLightPosition[1] += lightMoveSpeed;

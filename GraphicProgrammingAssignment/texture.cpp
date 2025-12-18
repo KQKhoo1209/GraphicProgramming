@@ -30,7 +30,7 @@ void LoadTexture()
 
 	// steel Texture
 	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
-		"YellowBrick.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		"steel.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
 		LR_LOADFROMFILE);
 	GetObject(hBMP, sizeof(BMP), &BMP);
 

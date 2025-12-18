@@ -1,7 +1,6 @@
 #include "InputManager.h"
 #include <gl/GL.h>
 #include <math.h>
-#include "leg.h"
 
 // External game state variables (these should be moved to a GameState class later)
 extern int questionToDisplay;
@@ -250,35 +249,6 @@ void InputManager::Update()
 	{
 		diffuseLightPosition[2] -= lightMoveSpeed;
 		lightZ = diffuseLightPosition[2];
-	}
-
-	if (IsKeyPressed(VK_UP))
-	{
-		kneeRotation += 0.1f;
-		if (kneeRotation >= 120.0f) {
-			kneeRotation = 120.0f;
-		}
-	}
-	if (IsKeyPressed(VK_DOWN))
-	{
-		kneeRotation -= 0.1f;
-		if (kneeRotation <= 0.0f) {
-			kneeRotation = 0.0f;
-		}
-	}
-	if (IsKeyPressed(VK_LEFT))
-	{
-		hipRotation += 0.1f;
-		if (hipRotation >= 45.0f) {
-			hipRotation = 45.0f;
-		}
-	}
-	if (IsKeyPressed(VK_RIGHT))
-	{
-		hipRotation -= 0.1f;
-		if (hipRotation <= -45.0f) {
-			hipRotation = -45.0f;
-		}
 	}
 }
 

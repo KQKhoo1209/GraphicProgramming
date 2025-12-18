@@ -1,10 +1,5 @@
-#ifndef LEG_H
-#define LEG_H
+#pragma once
+class leg
+{
+};
 
-extern float hipRotation;
-extern float kneeRotation;
-
-// Draw both legs
-void drawRobotLegs();
-
-#endif

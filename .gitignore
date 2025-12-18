@@ -1,2 +1,76 @@
-
+# =========================
+# Visual Studio files
+# =========================
 .vs/
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# =========================
+# Build output
+# =========================
+Debug/
+Release/
+x64/
+x86/
+Build/
+
+# =========================
+# Intermediate files
+# =========================
+*.obj
+*.pch
+*.idb
+*.pdb
+*.ipch
+*.tlog
+*.log
+*.ilk
+
+# =========================
+# Executables
+# =========================
+*.exe
+*.dll
+*.lib
+*.exp
+
+# =========================
+# OpenGL / runtime junk
+# =========================
+*.opengl
+*.cache
+
+# =========================
+# OS junk
+# =========================
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.bak
+*.swp
+
+# =========================
+# Texture & asset safety
+# =========================
+# Uncomment if you want to IGNORE textures
+# *.bmp
+# *.png
+# *.jpg
+
+# =========================
+# Do NOT ignore these
+# =========================
+!*.cpp
+!*.h
+!*.sln
+!*.vcxproj
+!*.filters
+!*.gitignore

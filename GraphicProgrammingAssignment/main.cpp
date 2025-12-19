@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "leg.h"
 #include "texture.h"
+#include "torso.h"
 
 #pragma comment (lib, "OpenGL32.lib") // A shortcut. Only works with windows platform
 #pragma comment (lib, "GLU32.lib")
@@ -20,6 +21,7 @@ float scaling = 1.0f;
 
 // Input Manager
 InputManager* inputManager = nullptr;
+torso* torsoBody = nullptr;
 
 // Camera direction vectors (calculated from yaw/pitch)
 float yawRad;
@@ -155,6 +157,7 @@ void Display() // Render
 
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHTING);
+	glEnable(GL_NORMALIZE);
 
 	// Camera View
 	//glOrtho(-4, 4, -4, 4, 4, -4);
@@ -206,7 +209,19 @@ void Display() // Render
 	}
 	case 1:
 	{
-		
+		// Light indicator (reuse existing light code)
+		glPushMatrix();
+		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+		gluSphere(var, 0.05f, 10, 10);
+		glPopMatrix();
+
+		// ===== Robot Torso =====
+		glPushMatrix();
+		glTranslatef(0.0f, -0.5f, 0.0f);
+		torsoBody->DrawTorso();
+		glPopMatrix();
 
 
 		break;
@@ -238,6 +253,23 @@ void Release()
 {
 	gluDeleteQuadric(var);
 	gluDeleteQuadric(tower);
+	torsoBody->~torso();
+}
+
+void ReleaseClass()
+{
+	// Clean up Input Manager
+	if (inputManager)
+	{
+		delete inputManager;
+		inputManager = nullptr;
+	}
+
+	if (torsoBody)
+	{
+		delete torsoBody;
+		torsoBody = nullptr;
+	}
 }
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
@@ -291,6 +323,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	LoadTexture();
 
+	torsoBody = new torso();
+	torsoBody->IntitializeTorsoQuadratics();
+
 	//--------------------------------
 	//	End initialization
 	//--------------------------------
@@ -326,13 +361,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	Release();
 	ReleaseTexture();
-
-	// Clean up Input Manager
-	if (inputManager)
-	{
-		delete inputManager;
-		inputManager = nullptr;
-	}
+	ReleaseClass();
 
 	UnregisterClass(WINDOW_TITLE, wc.hInstance);
 

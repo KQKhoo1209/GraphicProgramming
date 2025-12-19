@@ -262,6 +262,15 @@ void InputManager::Update()
 		lightZ = diffuseLightPosition[2];
 	}
 
+	if (IsKeyPressed('G'))
+	{
+		if (!isWalking)
+		{
+			isWalking = true;
+			walkPhase = 0.0f;
+		}
+	}
+		
 	if (IsKeyPressed(VK_UP))
 	{
 		kneeRotation += 0.1f;

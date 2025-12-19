@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
+#include <cmath>
 #include "leg.h"
 #include "texture.h"
 
@@ -8,6 +9,15 @@
 float hipRotation = 0.0f;
 float kneeRotation = 0.0f;
 static GLUquadric* quad = nullptr;
+
+bool isWalking = false;
+float walkPhase = 0.0f;
+
+float hipAnim = 0.0f;
+float kneeAnim = 0.0f;
+
+static const float animSpeed = 0.01f;
+static const float maxPhase = 6.28f; 
 
 void drawCuboid(float w, float h, float d)
 {
@@ -96,21 +106,20 @@ void drawLegDetails(float w, float h, float d)
 
     // Left side armor
     glPushMatrix();
-    glTranslatef(-x - 0.08f, 0.0f, 0.0f);
-    drawCuboid(0.08f, h * 0.8f, d * 0.8f);
+    glTranslatef(-x - 0.05f, 0.0f, 0.0f);
+    drawCuboid(0.12f, h * 0.85f, d * 0.9f);
     glPopMatrix();
 
     // Right side armor
     glPushMatrix();
-    glTranslatef(x + 0.08f, 0.0f, 0.0f);
-    drawCuboid(0.08f, h * 0.8f, d * 0.8f);
+    glTranslatef(x + 0.05f, 0.0f, 0.0f);
+    drawCuboid(0.12f, h * 0.85f, d * 0.9f);
     glPopMatrix();
 
     //shin
-
     glPushMatrix();
     glTranslatef(0.0f, 0.0f, d * 0.5f + 0.05f);
-    drawCuboid(w * 0.6f, h * 0.6f, 0.08f);
+    drawCuboid(w * 0.6f, h * 0.7f, 0.08f);
     glPopMatrix();
 
     glDisable(GL_TEXTURE_2D);
@@ -146,6 +155,12 @@ void drawFootDetails(float w, float h, float d)
     glPushMatrix();
     glTranslatef(0.0f, 0.0f, -z - 0.06f);
     drawCuboid(w * 0.5f, h * 0.6f, 0.1f);
+    glPopMatrix();
+
+    // block above foot
+    glPushMatrix();
+    glTranslatef(0.0f, 0.1f, 0.06f);
+    drawCuboid(0.2f, 0.1f, 0.5f);
     glPopMatrix();
 
     glDisable(GL_TEXTURE_2D);
@@ -199,45 +214,143 @@ void drawCoreSphere(float radius)
     gluSphere(quad, radius, 20, 20);
 }
 
+void drawPiston(float length) {
+    drawCuboid(0.05f, length, 0.05);
+}
+
+void drawHipModule()
+{
+    // hip
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
+
+    glPushMatrix();
+    drawCuboid(1.3f, 0.3f, 0.4f);   
+    glPopMatrix();
+
+    // Front armor plate
+    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
+    glPushMatrix();
+    glTranslatef(0.0f, -0.15f, 0.26f);
+    drawCuboid(0.5f, 0.4f, 0.08f);
+    glPopMatrix();
+
+    // Left hanging armor
+    glPushMatrix();
+    glTranslatef(-0.35f, -0.15f, 0.0f);
+    drawCuboid(0.08f, 0.45f, 0.35f);
+    glPopMatrix();
+
+    // Right hanging armor
+    glPushMatrix();
+    glTranslatef(0.35f, -0.15f, 0.0f);
+    drawCuboid(0.08f, 0.45f, 0.35f);
+    glPopMatrix();
+
+    // joint spheres
+    glBindTexture(GL_TEXTURE_2D, steelTexture);
+
+    glPushMatrix();
+    glTranslatef(-0.25f, -0.05f, 0.0f);
+    drawCoreSphere(0.08f);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.25f, -0.05f, 0.0f);
+    drawCoreSphere(0.08f);
+    glPopMatrix();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
 // leg
 void drawSingleLeg(float xOffset)
 {
+    if (isWalking)
+    {
+        float dir = (xOffset < 0.0f) ? 1.0f : -1.0f;
+
+        hipAnim = sin(walkPhase) * 25.0f * dir;
+        kneeAnim = fabs(sin(walkPhase)) * 35.0f;
+    }
+
     glPushMatrix();
 
     // Move leg left / right
     glTranslatef(xOffset, 0.0f, 0.0f);
 
     // hip joint
-    glRotatef(hipRotation, 1, 0, 0);
+    glRotatef(hipRotation + hipAnim, 1, 0, 0);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, redSteelTexture);
 
     // upper leg
-    glTranslatef(0.0f, -0.4f, 0.0f);
-    drawSegmentedLeg(0.3f, 0.8f, 0.3f, 6);
-    drawLegDetails(0.3f, 0.8f, 0.3f);
-
-    // sphere
     glPushMatrix();
-    glTranslatef(0.0f, 0.2f, 0.0f);   // center of armor
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, steelTexture); // or any texture
-    drawCoreSphere(0.2f);
+    glTranslatef(0.0f, -0.4f, 0.0f);
+    drawSegmentedLeg(0.4f, 0.65f, 0.4f, 5);
+    drawLegDetails(0.4f, 0.65f, 0.4f);
+
     glDisable(GL_TEXTURE_2D);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, steelTexture);
+
+    glPushMatrix();
+    glTranslatef(0.0f, -0.3f, 0.20f);
+    drawCuboid(0.1, 0.1f, 0.05f);
+
+    glDisable(GL_TEXTURE_2D);
+
     glPopMatrix();
 
+    //// sphere
+    //glPushMatrix();
+    //glTranslatef(0.0f, 0.12f, 0.0f);   // center of armor
+    //glEnable(GL_TEXTURE_2D);
+    //glBindTexture(GL_TEXTURE_2D, steelTexture); 
+    //drawCoreSphere(0.16f);
+    //glDisable(GL_TEXTURE_2D);
+    //glPopMatrix();
 
     // knee joint
-    glTranslatef(0.0f, -0.4f, 0.0f);
-    glRotatef(kneeRotation, 1, 0, 0);
+    glPushMatrix();
+    glTranslatef(0.8f, -0.48f, 0.0f);
+    glPopMatrix();
+    glTranslatef(0.0f, -0.32f, 0.0f);
+    glRotatef(kneeRotation + kneeAnim, 1, 0, 0);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
+
+    // pistons
+    glPushMatrix();
+    glTranslatef(0.15f, -0.3f, 0);
+    drawPiston(0.55f);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-0.15f, -0.3f, 0);
+    drawPiston(0.55f);
+    glPopMatrix();
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, redSteelTexture);
 
     // lower leg
     glTranslatef(0.0f, -0.45f, 0.0f);
-    drawCuboid(0.25f, 0.9f, 0.25f);
-    drawVerticalRibs(0.25f, 0.9f, 0.25f, 4);
+    drawCuboid(0.22f, 1.0f, 0.22f);
+    drawVerticalRibs(0.22f, 1.0f, 0.22f, 5);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
 
     // foot
-    glTranslatef(0.0f, -0.55f, 0.15f);
-    drawCuboid(0.45f, 0.2f, 0.7f);
-    drawFootDetails(0.45f, 0.15f, 0.7f);
+    glTranslatef(0.0f, -0.55f, 0.25f);
+    drawCuboid(0.55f, 0.22f, 0.85f);
+    drawFootDetails(0.55f, 0.18f, 0.85f);
+
+    glDisable(GL_TEXTURE_2D);
 
     glPopMatrix();
 }
@@ -245,9 +358,28 @@ void drawSingleLeg(float xOffset)
 // both legs
 void drawRobotLegs()
 {
-    // Left leg
-    drawSingleLeg(-0.35f);
+    glPushMatrix();
 
-    // Right leg
-    drawSingleLeg(0.35f);
+    // === Raise hip ABOVE legs ===
+    glTranslatef(0.0f, 0.35f, 0.0f); 
+    drawHipModule();
+
+    // === Legs are children of hip ===
+    drawSingleLeg(-0.45f);
+    drawSingleLeg(0.45f);
+
+    glPopMatrix();
+
+    // walk update
+    if (isWalking)
+    {
+        walkPhase += animSpeed;
+
+        if (walkPhase >= maxPhase)
+        {
+            walkPhase = maxPhase;
+            isWalking = false;
+        }
+    }
 }
+

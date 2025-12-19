@@ -218,6 +218,51 @@ void drawPiston(float length) {
     drawCuboid(0.05f, length, 0.05);
 }
 
+void drawHipModule()
+{
+    // hip
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
+
+    glPushMatrix();
+    drawCuboid(1.3f, 0.3f, 0.4f);   
+    glPopMatrix();
+
+    // Front armor plate
+    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
+    glPushMatrix();
+    glTranslatef(0.0f, -0.15f, 0.26f);
+    drawCuboid(0.5f, 0.4f, 0.08f);
+    glPopMatrix();
+
+    // Left hanging armor
+    glPushMatrix();
+    glTranslatef(-0.35f, -0.15f, 0.0f);
+    drawCuboid(0.08f, 0.45f, 0.35f);
+    glPopMatrix();
+
+    // Right hanging armor
+    glPushMatrix();
+    glTranslatef(0.35f, -0.15f, 0.0f);
+    drawCuboid(0.08f, 0.45f, 0.35f);
+    glPopMatrix();
+
+    // joint spheres
+    glBindTexture(GL_TEXTURE_2D, steelTexture);
+
+    glPushMatrix();
+    glTranslatef(-0.25f, -0.05f, 0.0f);
+    drawCoreSphere(0.08f);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.25f, -0.05f, 0.0f);
+    drawCoreSphere(0.08f);
+    glPopMatrix();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
 // leg
 void drawSingleLeg(float xOffset)
 {
@@ -313,12 +358,19 @@ void drawSingleLeg(float xOffset)
 // both legs
 void drawRobotLegs()
 {
-    // Left leg
-    drawSingleLeg(-0.4f);
+    glPushMatrix();
 
-    // Right leg
-    drawSingleLeg(0.4f);
+    // === Raise hip ABOVE legs ===
+    glTranslatef(0.0f, 0.35f, 0.0f); 
+    drawHipModule();
 
+    // === Legs are children of hip ===
+    drawSingleLeg(-0.45f);
+    drawSingleLeg(0.45f);
+
+    glPopMatrix();
+
+    // walk update
     if (isWalking)
     {
         walkPhase += animSpeed;
@@ -327,6 +379,7 @@ void drawRobotLegs()
         {
             walkPhase = maxPhase;
             isWalking = false;
-        }   
+        }
     }
 }
+

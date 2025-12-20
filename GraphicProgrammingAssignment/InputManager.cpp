@@ -4,6 +4,7 @@
 #include "head.h"
 #include "torso.h"
 #include "leg.h"
+#include "arm.h"
 
 // External game state variables (these should be moved to a GameState class later)
 extern int questionToDisplay;
@@ -137,6 +138,41 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 		break;
 	case 'P':
 		camSwitch *= -1;
+		break;
+	case 'E':
+		bridgeRot -= 1.0f;
+		if (bridgeRot <= 0) {
+			bridgeRot = 0;
+		}
+		if (OnBridgeRotate) OnBridgeRotate(bridgeRot);
+		break;
+	case 'Z':
+		shoulderAngle += 5.0f;
+		if (shoulderAngle > 90.0f) shoulderAngle = 90.0f;
+		break;
+	case 'X':
+		shoulderAngle -= 5.0f;
+		if (shoulderAngle < -45.0f) shoulderAngle = -45.0f;
+		break;
+	case 'C':
+		elbowAngle += 5.0f;
+		if (elbowAngle > 145.0f) elbowAngle = 145.0f;
+		break;
+	case 'V':
+		elbowAngle -= 5.0f;
+		if (elbowAngle < 0.0f) elbowAngle = 0.0f;
+		break;
+	case 'B':
+		wristAngle += 5.0f;
+		if (wristAngle > 60.0f) wristAngle = 60.0f;
+		break;
+	case 'N':
+		wristAngle -= 5.0f;
+		if (wristAngle < -60.0f) wristAngle = -60.0f;
+		break;
+	case VK_SPACE:
+		bridgeRot = 0.0f;
+		if (OnBridgeRotate) OnBridgeRotate(bridgeRot);
 		break;
 	case VK_ESCAPE:
 		if (OnQuit) OnQuit();

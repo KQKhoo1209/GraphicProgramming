@@ -4,6 +4,7 @@
 #include <math.h>
 #include "InputManager.h"
 #include "leg.h"
+#include "arm.h"
 #include "texture.h"
 #include "torso.h"
 #include "head.h"
@@ -239,8 +240,11 @@ void Display() // Render
 				glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
-		break;
+
+
+		
 	}
+	break;
 	case 2: 
 	{
 
@@ -253,6 +257,19 @@ void Display() // Render
 	case 4:
 	{
 
+		// Light indicator (reuse existing light code)
+		glPushMatrix();
+		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+		gluSphere(var, 0.05f, 10, 10);
+		glPopMatrix();
+
+		// ===== YOUR ROBOT LEGS =====
+		glPushMatrix();
+		glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
+		DrawArm();
+		glPopMatrix();
 		break;
 	}
 	default:

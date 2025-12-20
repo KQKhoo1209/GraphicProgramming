@@ -10,7 +10,7 @@ private:
 public:
 	torso();   // constructor
 	~torso();  // destructor
-	void IntitializeTorsoQuadratics();
+	void InitializeTorsoQuadratics();
 	void TorsoFrontPattern();
 	void TorsoBackPattern();
 	void TorsoFront();

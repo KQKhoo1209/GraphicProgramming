@@ -152,9 +152,3 @@ void ReleaseTexture()
 	DeleteObject(hBMP);
 	glDeleteTextures(1, &whiteMetalTexture);
 }
-
-void BindTexture(GLuint texID) 
-{
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, texID);
-}

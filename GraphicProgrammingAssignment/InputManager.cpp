@@ -1,8 +1,7 @@
 #include "InputManager.h"
 #include <gl/GL.h>
 #include <math.h>
-#include "head.h"
-#include "torso.h"
+#include "Robot.h"
 #include "leg.h"
 #include "arm.h"
 
@@ -13,7 +12,7 @@ extern int spherePoint;
 extern int camSwitch;
 extern GLfloat diffuseLightPosition[];
 
-InputManager::InputManager(head* headObj, torso* torsoObj)
+InputManager::InputManager(Robot* robotObj)
 	: hWnd(nullptr)
 	, windowWidth(1280)
 	, windowHeight(720)
@@ -32,11 +31,7 @@ InputManager::InputManager(head* headObj, torso* torsoObj)
 	, lastMouseX(400)
 	, lastMouseY(300)
 	, firstMouse(true)
-	, OnQuestionChange(nullptr)
-	, OnBridgeRotate(nullptr)
-	, OnQuit(nullptr)
-	, robotHead(headObj)
-	, robotTorso(torsoObj)
+	, robot(robotObj)
 {
 	// Initialize key states
 	for (int i = 0; i < 256; i++)
@@ -45,14 +40,9 @@ InputManager::InputManager(head* headObj, torso* torsoObj)
 	}
 }
 
-void InputManager::SetHead(head* headObj)
+void InputManager::SetRobot(Robot* robotObj)
 {
-	robotHead = headObj;
-}
-
-void InputManager::SetTorso(torso* torsoObj)
-{
-	robotTorso = torsoObj;
+	robot = robotObj;
 }
 
 InputManager::~InputManager()
@@ -109,42 +99,28 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 	switch (wParam)
 	{
 	case '1':
-		if (OnQuestionChange) OnQuestionChange(0);
 		questionToDisplay = 0;
 		break;
 	case '2':
-		if (OnQuestionChange) OnQuestionChange(1);
 		questionToDisplay = 1;
 		break;
 	case '3':
-		if (OnQuestionChange) OnQuestionChange(2);
 		questionToDisplay = 2;
 		break;
 	case '4':
-		if (OnQuestionChange) OnQuestionChange(3);
 		questionToDisplay = 3;
 		break;
 	case '5':
-		if (OnQuestionChange) OnQuestionChange(4);
 		questionToDisplay = 4;
 		break;
 	case '6':
-		if (OnQuestionChange) OnQuestionChange(5);
 		questionToDisplay = 5;
 		break;
 	case '7':
-		if (OnQuestionChange) OnQuestionChange(6);
 		questionToDisplay = 6;
 		break;
 	case 'P':
 		camSwitch *= -1;
-		break;
-	case 'E':
-		bridgeRot -= 1.0f;
-		if (bridgeRot <= 0) {
-			bridgeRot = 0;
-		}
-		if (OnBridgeRotate) OnBridgeRotate(bridgeRot);
 		break;
 	case 'Z':
 		shoulderAngle += 5.0f;
@@ -170,12 +146,7 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 		wristAngle -= 5.0f;
 		if (wristAngle < -60.0f) wristAngle = -60.0f;
 		break;
-	case VK_SPACE:
-		bridgeRot = 0.0f;
-		if (OnBridgeRotate) OnBridgeRotate(bridgeRot);
-		break;
 	case VK_ESCAPE:
-		if (OnQuit) OnQuit();
 		PostQuitMessage(0);
 		break;
 	default:
@@ -307,33 +278,17 @@ void InputManager::Update()
 		}
 	}
 
-	// Head Rotation
-	if (IsKeyPressed('Z'))
-	{
-		robotHead->RotateY(-0.05f);
-	}
-	if (IsKeyPressed('X'))
-	{
-		robotHead->RotateY(0.05f);
-	}
-	if (IsKeyPressed('C'))
-	{
-		robotHead->RotateX(0.05f);
-	}
-	if (IsKeyPressed('V'))
-	{
-		robotHead->RotateX(-0.05f);
-	}
+	/*if (robot) {
+		if (IsKeyPressed('Z')) { robot->RotateHeadY(-0.05f); }
+		if (IsKeyPressed('X')) { robot->RotateHeadY(0.05f); }
+		if (IsKeyPressed('C')) { robot->RotateHeadZ(0.05f); }
+		if (IsKeyPressed('V')) { robot->RotateHeadZ(-0.05f); }
 
-	if (IsKeyPressed('Z')) { robotHead->RotateY(-0.05f); }
-	if (IsKeyPressed('X')) { robotHead->RotateY(0.05f); }
-	if (IsKeyPressed('C')) { robotHead->RotateX(0.05f); }
-	if (IsKeyPressed('V')) { robotHead->RotateX(-0.05f); }
-
-	if (IsKeyPressed('B')) { robotTorso->RotateY(-0.05f); }
-	if (IsKeyPressed('H')) { robotTorso->RotateY(0.05f); }
-	if (IsKeyPressed('N')) { robotTorso->RotateZ(0.05f); }
-	if (IsKeyPressed('M')) { robotTorso->RotateZ(-0.05f); }
+		if (IsKeyPressed('B')) { robot->RotateTorsoY(-0.05f); }
+		if (IsKeyPressed('H')) { robot->RotateTorsoY(0.05f); }
+		if (IsKeyPressed('N')) { robot->RotateTorsoZ(0.05f); }
+		if (IsKeyPressed('M')) { robot->RotateTorsoZ(-0.05f); }
+	}*/
 		
 	if (IsKeyPressed(VK_UP))
 	{

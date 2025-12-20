@@ -15,6 +15,5 @@ extern GLuint whiteMetalTexture;
 
 void LoadTexture();
 void ReleaseTexture();
-void BindTexture(GLuint textureID);
 
 #endif

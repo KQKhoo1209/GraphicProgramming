@@ -1,6 +1,4 @@
 #include <Windows.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
 #include "torso.h"
 #include "helperFunction.h"
 #include "texture.h"
@@ -99,9 +97,6 @@ torso::torso()
     ringX = 0.0f;
     ringY = 0.0f;
 
-    torsoRotY = 0.0f;
-    torsoRotZ = 0.0f;
-
     GLfloat coreDiffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
     GLfloat coreSpecular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     GLfloat coreEmission[] = { 0.6f, 0.9f, 1.0f, 1.0f };
@@ -117,16 +112,6 @@ torso::~torso()
     }
 }
 
-void torso::RotateY(float delta)
-{
-    torsoRotY += delta;
-}
-
-void torso::RotateZ(float delta)
-{
-    torsoRotZ += delta;
-}
-
 void torso::InitializeTorsoQuadratics()
 {
     gluQuadricTexture(robotTorso, GL_TRUE);
@@ -136,9 +121,7 @@ void torso::InitializeTorsoQuadratics()
 
 void torso::TorsoFrontPattern()
 {
-    BindTexture(darkSteelTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.0f, 0.1f);
     glRotatef(90, 0.0f, 0.0f, 1.0f);
@@ -170,7 +153,7 @@ void torso::TorsoFrontPattern()
     DrawCube(0.05f);
     glPopMatrix();
 
-    BindTexture(redSteelTexture);
+    glBindTexture(GL_TEXTURE_2D, redSteelTexture);
     glPushMatrix();
     glTranslatef(0.0f, -0.35f, 0.0f);
     glRotatef(30, 1.0f, 0.0f, 0.0f);
@@ -198,7 +181,7 @@ void torso::TorsoFrontPattern()
     glPopMatrix();
 
     // Robot Middle Light
-    BindTexture(steelTexture);
+    glBindTexture(GL_TEXTURE_2D, steelTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.225f, 0.1f);
     glNormal3f(0.0f, 0.0f, 1.0f);
@@ -217,6 +200,7 @@ void torso::TorsoFrontPattern()
     glEnd();
     glPopMatrix();
 
+    glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.05f, 0.095f);
     glNormal3f(0.0f, 0.0f, 1.0f);
@@ -227,8 +211,6 @@ void torso::TorsoFrontPattern()
         ringX = 0.12f * cos(ringDotAngle);
         ringY = 0.12f * sin(ringDotAngle);
 
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, blackColor);
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blackColor);
         glVertex2f(ringX, ringY + 0.2f);
     }
     glEnd();
@@ -238,9 +220,7 @@ void torso::TorsoFrontPattern()
 void torso::TorsoBackPattern()
 {
     // Back Large Cube
-    BindTexture(steelTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, steelTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.575f, -0.075f);
     glRotatef(45, 1.0f, 0.0f, 0.0f);
@@ -274,7 +254,7 @@ void torso::TorsoBackPattern()
     );
     glPopMatrix();
 
-    BindTexture(darkSteelTexture);
+    glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.515f, 0.0f);
     glRotatef(45, 1.0f, 0.0f, 0.0f);
@@ -339,9 +319,7 @@ void torso::TorsoBackPattern()
 
 void TorsoUpperPattern()
 {
-    BindTexture(carbonTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, carbonTexture);
     glPushMatrix();
     glTranslatef(-0.6f, -0.2f, 0.0f);
     glRotatef(45, 0.0f, 0.0f, 1.0f);
@@ -373,9 +351,7 @@ void TorsoUpperPattern()
 
 void TorsoBottomPattern() 
 {
-    BindTexture(darkSteelTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
     glPushMatrix();
     glTranslatef(-0.45f, -0.4f, 0.0f);
     glRotatef(-75, 0.0f, 1.0f, 0.0f);
@@ -391,9 +367,7 @@ void TorsoBottomPattern()
 
 void torso::TorsoFront()
 {
-    BindTexture(blueSteelTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
     glPushMatrix();
     QuadNormal(
         -0.19f, 0.5f, 0.0f,
@@ -544,7 +518,7 @@ void torso::TorsoFront()
     glEnd();
     glPopMatrix();
 
-    BindTexture(darkSteelTexture);
+    glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
     // Left Black
     glPushMatrix();
     glTranslatef(-0.2f, 0.0f, 0.0f);
@@ -690,9 +664,7 @@ void torso::TorsoFront()
 
 void torso::TorsoUpper()
 {
-    BindTexture(blueSteelTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
     // Middle Upper
     glPushMatrix();
     glNormal3f(0.0f, 1.0f, 0.0f);
@@ -843,9 +815,7 @@ void torso::TorsoUpper()
 
 void torso::TorsoSide()
 {
-    BindTexture(steelTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, steelTexture);
 
     // Left Side
     glPushMatrix();
@@ -1147,9 +1117,7 @@ void torso::TorsoSide()
 
 void torso::TorsoBack()
 {
-    BindTexture(blueSteelTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
     // Left
     glPushMatrix();
     glNormal3f(0.0f, 0.0f, -1.0f);
@@ -1230,9 +1198,7 @@ void torso::TorsoBack()
 void torso::middleCylinder()
 {
     glPushMatrix();
-    BindTexture(whiteMetalTexture);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+    glBindTexture(GL_TEXTURE_2D, whiteMetalTexture);
     glRotatef(-90, 1.0f, 0.0f, 0.0f);
     gluCylinder(robotTorso, 0.175f, 0.175f, 1.0f, 8, 1);
     glPopMatrix();
@@ -1240,33 +1206,33 @@ void torso::middleCylinder()
 
 void torso::DrawTorso()
 {
+    glEnable(GL_TEXTURE_2D);
+
     glPushMatrix();
-    glRotatef(torsoRotY, 0.0f, 1.0f, 0.0f);
-    glRotatef(torsoRotZ, 1.0f, 0.0f, 0.0f);
-        glPushMatrix();
-        middleCylinder();
-        glPopMatrix();
-
-        // Upper Side
-        glPushMatrix();
-        glTranslatef(0.0f, 0.85f, 0.0f);
-        TorsoUpper();
-        glPopMatrix();
-
-        // Left Side
-        glPushMatrix();
-        glTranslatef(0.0f, 0.2f, 0.0f);
-        TorsoSide();
-        glPopMatrix();
-
-        glPushMatrix();
-        glTranslatef(0.0f, 0.2f, 0.35f);
-        TorsoFront();
-        glPopMatrix();
-
-        glPushMatrix();
-        glTranslatef(0.0f, 0.2f, -0.25f);
-        TorsoBack();
-        glPopMatrix();
+    middleCylinder();
     glPopMatrix();
+
+    // Upper Side
+    glPushMatrix();
+    glTranslatef(0.0f, 0.85f, 0.0f);
+    TorsoUpper();
+    glPopMatrix();
+
+    // Left Side
+    glPushMatrix();
+    glTranslatef(0.0f, 0.2f, 0.0f);
+    TorsoSide();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.2f, 0.35f);
+    TorsoFront();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.2f, -0.25f);
+    TorsoBack();
+    glPopMatrix();
+
+    glDisable(GL_TEXTURE_2D);
 }

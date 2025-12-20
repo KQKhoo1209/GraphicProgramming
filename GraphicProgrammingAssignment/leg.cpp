@@ -101,7 +101,6 @@ void drawLegDetails(float w, float h, float d)
     float x = w * 0.5f;
 
     //side
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
 
     // Left side armor
@@ -121,8 +120,6 @@ void drawLegDetails(float w, float h, float d)
     glTranslatef(0.0f, 0.0f, d * 0.5f + 0.05f);
     drawCuboid(w * 0.6f, h * 0.7f, 0.08f);
     glPopMatrix();
-
-    glDisable(GL_TEXTURE_2D);
 }
 
 void drawFootDetails(float w, float h, float d)
@@ -130,7 +127,6 @@ void drawFootDetails(float w, float h, float d)
     float x = w * 0.5f;
     float z = d * 0.5f;
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, steelTexture);
 
     // === Toe armor (front) ===
@@ -162,15 +158,12 @@ void drawFootDetails(float w, float h, float d)
     glTranslatef(0.0f, 0.1f, 0.06f);
     drawCuboid(0.2f, 0.1f, 0.5f);
     glPopMatrix();
-
-    glDisable(GL_TEXTURE_2D);
 }
 
 void drawSegmentedLeg(float w, float h, float d, int segments)
 {
     float step = h / segments;
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
 
     for (int i = 0; i < segments; i++)
@@ -180,15 +173,12 @@ void drawSegmentedLeg(float w, float h, float d, int segments)
         drawCuboid(w, step, d);
         glPopMatrix();
     }
-
-    glDisable(GL_TEXTURE_2D);
 }
 
 void drawVerticalRibs(float w, float h, float d, int count)
 {
     float spacing = w / (count + 1);
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, steelTexture);
 
     for (int i = 1; i <= count; i++)
@@ -198,8 +188,6 @@ void drawVerticalRibs(float w, float h, float d, int count)
         drawCuboid(0.03f, h * 0.9f, 0.05f);
         glPopMatrix();
     }
-
-    glDisable(GL_TEXTURE_2D);
 }
 
 void drawCoreSphere(float radius)
@@ -221,7 +209,6 @@ void drawPiston(float length) {
 void drawHipModule()
 {
     // hip
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, darkSteelTexture);
 
     glPushMatrix();
@@ -259,8 +246,6 @@ void drawHipModule()
     glTranslatef(0.25f, -0.05f, 0.0f);
     drawCoreSphere(0.08f);
     glPopMatrix();
-
-    glDisable(GL_TEXTURE_2D);
 }
 
 // leg
@@ -282,25 +267,20 @@ void drawSingleLeg(float xOffset)
     // hip joint
     glRotatef(hipRotation + hipAnim, 1, 0, 0);
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, redSteelTexture);
 
     // upper leg
     glPushMatrix();
-    glTranslatef(0.0f, -0.4f, 0.0f);
+    glTranslatef(0.0f, -0.1f, 0.0f);
     drawSegmentedLeg(0.4f, 0.65f, 0.4f, 5);
     drawLegDetails(0.4f, 0.65f, 0.4f);
+    glPopMatrix();
 
-    glDisable(GL_TEXTURE_2D);
-
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, steelTexture);
 
     glPushMatrix();
     glTranslatef(0.0f, -0.3f, 0.20f);
     drawCuboid(0.1, 0.1f, 0.05f);
-
-    glDisable(GL_TEXTURE_2D);
 
     glPopMatrix();
 
@@ -320,7 +300,6 @@ void drawSingleLeg(float xOffset)
     glTranslatef(0.0f, -0.32f, 0.0f);
     glRotatef(kneeRotation + kneeAnim, 1, 0, 0);
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
 
     // pistons
@@ -334,7 +313,6 @@ void drawSingleLeg(float xOffset)
     drawPiston(0.55f);
     glPopMatrix();
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, redSteelTexture);
 
     // lower leg
@@ -342,16 +320,12 @@ void drawSingleLeg(float xOffset)
     drawCuboid(0.22f, 1.0f, 0.22f);
     drawVerticalRibs(0.22f, 1.0f, 0.22f, 5);
 
-    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
 
     // foot
     glTranslatef(0.0f, -0.55f, 0.25f);
     drawCuboid(0.55f, 0.22f, 0.85f);
     drawFootDetails(0.55f, 0.18f, 0.85f);
-
-    glDisable(GL_TEXTURE_2D);
-
     glPopMatrix();
 }
 
@@ -359,15 +333,17 @@ void drawSingleLeg(float xOffset)
 void drawRobotLegs()
 {
     glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
 
     // === Raise hip ABOVE legs ===
-    glTranslatef(0.0f, 0.35f, 0.0f); 
+    glTranslatef(0.0f, 0.35f, 0.0f);
     drawHipModule();
 
     // === Legs are children of hip ===
     drawSingleLeg(-0.45f);
     drawSingleLeg(0.45f);
 
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     // walk update

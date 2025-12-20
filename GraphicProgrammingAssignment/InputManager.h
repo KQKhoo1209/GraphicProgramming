@@ -4,8 +4,7 @@
 
 // Forward declarations
 class Camera;
-class head;
-class torso;
+class Robot;
 
 class InputManager
 {
@@ -42,11 +41,10 @@ private:
 	void HandleMouseMove(HWND hWnd, LPARAM lParam);
 	void CenterMouseCursor(HWND hWnd);
 
-	head* robotHead;
-	torso* robotTorso;
+	Robot* robot;
 
 public:
-	InputManager(head* headObj = nullptr, torso* torsoObj = nullptr);
+	InputManager(Robot* robotObj);
 	~InputManager();
 
 	// Initialize input manager with window handle and dimensions
@@ -97,12 +95,6 @@ public:
 	float GetLightMoveSpeed() const { return lightMoveSpeed; }
 	void SetLightMoveSpeed(float speed) { lightMoveSpeed = speed; }
 
-	void SetHead(head* headObj);
-	void SetTorso(torso* torsoObj);
-
-	// Game state callbacks (set these to handle game-specific input)
-	void (*OnQuestionChange)(int question);
-	void (*OnBridgeRotate)(float rotation);
-	void (*OnQuit)();
+	void SetRobot(Robot* robotObj);
 };
 

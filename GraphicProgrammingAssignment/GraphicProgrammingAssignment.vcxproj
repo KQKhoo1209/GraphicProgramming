@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="arm.cpp" />
     <ClCompile Include="head.cpp" />
+    <ClCompile Include="helperFunction.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="leg.cpp" />
     <ClCompile Include="main.cpp" />
@@ -134,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="arm.h" />
     <ClInclude Include="head.h" />
+    <ClInclude Include="helperFunction.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="leg.h" />
     <ClInclude Include="texture.h" />

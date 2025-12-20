@@ -9,8 +9,12 @@ extern GLuint blueSteelTexture;
 extern GLuint steelTexture;
 extern GLuint darkSteelTexture;
 extern GLuint redSteelTexture;
+extern GLuint carbonTexture;
+extern GLuint darkBlueTexture;
+extern GLuint whiteMetalTexture;
 
 void LoadTexture();
 void ReleaseTexture();
+void BindTexture(GLuint textureID);
 
 #endif

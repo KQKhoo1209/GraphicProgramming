@@ -6,6 +6,7 @@
 #include "leg.h"
 #include "texture.h"
 #include "torso.h"
+#include "head.h"
 
 #pragma comment (lib, "OpenGL32.lib") // A shortcut. Only works with windows platform
 #pragma comment (lib, "GLU32.lib")
@@ -22,6 +23,7 @@ float scaling = 1.0f;
 // Input Manager
 InputManager* inputManager = nullptr;
 torso* torsoBody = nullptr;
+head* robotHead = nullptr;
 
 // Camera direction vectors (calculated from yaw/pitch)
 float yawRad;
@@ -217,13 +219,18 @@ void Display() // Render
 		gluSphere(var, 0.05f, 10, 10);
 		glPopMatrix();
 
-		// ===== Robot Torso =====
+		// ===== Robot Torso / Head =====
 		glPushMatrix();
-		glTranslatef(0.0f, -0.5f, 0.0f);
-		torsoBody->DrawTorso();
+			glPushMatrix();
+				glTranslatef(0.0f, -1.0f, 0.0f);
+				torsoBody->DrawTorso();
+
+				glPushMatrix();
+					glTranslatef(0.0f, 1.225f, 0.0f);
+					robotHead->DrawHead();
+				glPopMatrix();
+			glPopMatrix();
 		glPopMatrix();
-
-
 		break;
 	}
 	case 2: 
@@ -248,12 +255,21 @@ void Display() // Render
 	//--------------------------------
 }
 //--------------------------------------------------------------------
+void InitClass()
+{
+	torsoBody = new torso();
+	torsoBody->InitializeTorsoQuadratics();
+
+	robotHead = new head();
+	robotHead->InitializeHeadQuadratics();
+}
 
 void Release()
 {
 	gluDeleteQuadric(var);
 	gluDeleteQuadric(tower);
 	torsoBody->~torso();
+	robotHead->~head();
 }
 
 void ReleaseClass()
@@ -322,9 +338,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	glLoadIdentity();
 
 	LoadTexture();
-
-	torsoBody = new torso();
-	torsoBody->IntitializeTorsoQuadratics();
+	InitClass();
 
 	//--------------------------------
 	//	End initialization

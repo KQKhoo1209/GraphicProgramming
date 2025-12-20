@@ -7,6 +7,8 @@ private:
 	float ringDotAngle;
 	float ringX;
 	float ringY;
+	float torsoRotY;
+	float torsoRotZ;
 public:
 	torso();   // constructor
 	~torso();  // destructor
@@ -19,5 +21,9 @@ public:
 	void TorsoBack();
 	void middleCylinder();
 	void DrawTorso();
+	void RotateY(float delta);
+	void RotateZ(float delta);
+	float GetRotationY() const { return torsoRotY; }
+	float GetRotationZ() const { return torsoRotZ; }
 };
 

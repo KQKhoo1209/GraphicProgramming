@@ -4,6 +4,7 @@
 #include <math.h>
 #include "InputManager.h"
 #include "leg.h"
+#include "arm.h"
 #include "texture.h"
 #include "torso.h"
 #include "head.h"
@@ -12,6 +13,10 @@
 #pragma comment (lib, "GLU32.lib")
 
 #define WINDOW_TITLE "OpenGL Window"
+
+HWND hWnd;
+int windowWidth = 1280;
+int windowHeight = 720;
 
 int questionToDisplay = 0;
 int change = 1;
@@ -31,6 +36,7 @@ float pitchRad;
 float dirX;
 float dirY;
 float dirZ;
+int camSwitch = 1;
 
 float bridgeRot = 0.0f;
 
@@ -161,10 +167,6 @@ void Display() // Render
 	glEnable(GL_LIGHTING);
 	glEnable(GL_NORMALIZE);
 
-	// Camera View
-	//glOrtho(-4, 4, -4, 4, 4, -4);
-	//glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.2, 2);
-
 	// Set up projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -175,7 +177,14 @@ void Display() // Render
 	float aspectRatio = (float)windowWidth / (float)windowHeight;
 	if (windowHeight == 0) aspectRatio = 1.777f; // Prevent division by zero
 
-	gluPerspective(50.6272, aspectRatio, 0.01f, 100.0f);
+	// Camera View
+	if (camSwitch == 1) {
+		gluPerspective(50.6272, aspectRatio, 0.01f, 100.0f);
+	}
+	else if(camSwitch == -1) {
+		glOrtho(-5, 5, -5, 5, -5, 5);
+	}
+	//glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.2, 2);
 
 	// Set up modelview matrix and camera
 	glMatrixMode(GL_MODELVIEW);
@@ -222,7 +231,7 @@ void Display() // Render
 		// ===== Robot Torso / Head =====
 		glPushMatrix();
 			glPushMatrix();
-				glTranslatef(0.0f, -1.0f, 0.0f);
+				glTranslatef(0.0f, 0.0f, 0.0f);
 				torsoBody->DrawTorso();
 
 				glPushMatrix();
@@ -231,8 +240,11 @@ void Display() // Render
 				glPopMatrix();
 			glPopMatrix();
 		glPopMatrix();
-		break;
+
+
+		
 	}
+	break;
 	case 2: 
 	{
 
@@ -245,6 +257,19 @@ void Display() // Render
 	case 4:
 	{
 
+		// Light indicator (reuse existing light code)
+		glPushMatrix();
+		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+		gluSphere(var, 0.05f, 10, 10);
+		glPopMatrix();
+
+		// ===== YOUR ROBOT LEGS =====
+		glPushMatrix();
+		glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
+		DrawArm();
+		glPopMatrix();
 		break;
 	}
 	default:
@@ -262,6 +287,9 @@ void InitClass()
 
 	robotHead = new head();
 	robotHead->InitializeHeadQuadratics();
+
+	inputManager = new InputManager(robotHead, torsoBody);
+	inputManager->Initialize(hWnd, windowWidth, windowHeight);
 }
 
 void Release()
@@ -301,18 +329,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	if (!RegisterClassEx(&wc)) return false;
 
-	// Initialize Input Manager
-	inputManager = new InputManager();
-	int windowWidth = 1280;
-	int windowHeight = 720;
-
 	// Create windowed mode window
-	HWND hWnd = CreateWindow(WINDOW_TITLE, WINDOW_TITLE, WS_OVERLAPPEDWINDOW,
+	hWnd = CreateWindow(WINDOW_TITLE, WINDOW_TITLE, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, windowWidth, windowHeight,
 		NULL, NULL, wc.hInstance, NULL);
-
-	// Initialize Input Manager with window handle
-	inputManager->Initialize(hWnd, windowWidth, windowHeight);
 
 	// Set pointer to diffuse light position array
 	//inputManager->SetLightPositionPointer(diffuseLightPosition[]);

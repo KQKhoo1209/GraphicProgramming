@@ -99,6 +99,9 @@ torso::torso()
     ringX = 0.0f;
     ringY = 0.0f;
 
+    torsoRotY = 0.0f;
+    torsoRotZ = 0.0f;
+
     GLfloat coreDiffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
     GLfloat coreSpecular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
     GLfloat coreEmission[] = { 0.6f, 0.9f, 1.0f, 1.0f };
@@ -112,6 +115,16 @@ torso::~torso()
         gluDeleteQuadric(robotTorso);
         robotTorso = nullptr;
     }
+}
+
+void torso::RotateY(float delta)
+{
+    torsoRotY += delta;
+}
+
+void torso::RotateZ(float delta)
+{
+    torsoRotZ += delta;
 }
 
 void torso::InitializeTorsoQuadratics()
@@ -1228,28 +1241,32 @@ void torso::middleCylinder()
 void torso::DrawTorso()
 {
     glPushMatrix();
-    middleCylinder();
-    glPopMatrix();
+    glRotatef(torsoRotY, 0.0f, 1.0f, 0.0f);
+    glRotatef(torsoRotZ, 1.0f, 0.0f, 0.0f);
+        glPushMatrix();
+        middleCylinder();
+        glPopMatrix();
 
-    // Upper Side
-    glPushMatrix();
-    glTranslatef(0.0f, 0.85f, 0.0f);
-    TorsoUpper();
-    glPopMatrix();
+        // Upper Side
+        glPushMatrix();
+        glTranslatef(0.0f, 0.85f, 0.0f);
+        TorsoUpper();
+        glPopMatrix();
 
-    // Left Side
-    glPushMatrix();
-    glTranslatef(0.0f, 0.2f, 0.0f);
-    TorsoSide();
-    glPopMatrix();
+        // Left Side
+        glPushMatrix();
+        glTranslatef(0.0f, 0.2f, 0.0f);
+        TorsoSide();
+        glPopMatrix();
 
-    glPushMatrix();
-    glTranslatef(0.0f, 0.2f, 0.35f);
-    TorsoFront();
-    glPopMatrix();
+        glPushMatrix();
+        glTranslatef(0.0f, 0.2f, 0.35f);
+        TorsoFront();
+        glPopMatrix();
 
-    glPushMatrix();
-    glTranslatef(0.0f, 0.2f, -0.25f);
-    TorsoBack();
+        glPushMatrix();
+        glTranslatef(0.0f, 0.2f, -0.25f);
+        TorsoBack();
+        glPopMatrix();
     glPopMatrix();
 }

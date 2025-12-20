@@ -1,15 +1,18 @@
 #include "InputManager.h"
 #include <gl/GL.h>
 #include <math.h>
+#include "head.h"
+#include "torso.h"
 #include "leg.h"
 
 // External game state variables (these should be moved to a GameState class later)
 extern int questionToDisplay;
 extern float bridgeRot;
 extern int spherePoint;
+extern int camSwitch;
 extern GLfloat diffuseLightPosition[];
 
-InputManager::InputManager()
+InputManager::InputManager(head* headObj, torso* torsoObj)
 	: hWnd(nullptr)
 	, windowWidth(1280)
 	, windowHeight(720)
@@ -31,12 +34,24 @@ InputManager::InputManager()
 	, OnQuestionChange(nullptr)
 	, OnBridgeRotate(nullptr)
 	, OnQuit(nullptr)
+	, robotHead(headObj)
+	, robotTorso(torsoObj)
 {
 	// Initialize key states
 	for (int i = 0; i < 256; i++)
 	{
 		keys[i] = false;
 	}
+}
+
+void InputManager::SetHead(head* headObj)
+{
+	robotHead = headObj;
+}
+
+void InputManager::SetTorso(torso* torsoObj)
+{
+	robotTorso = torsoObj;
 }
 
 InputManager::~InputManager()
@@ -120,23 +135,8 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 		if (OnQuestionChange) OnQuestionChange(6);
 		questionToDisplay = 6;
 		break;
-	case 'Q':
-		bridgeRot += 1.0f;
-		if (bridgeRot >= 45) {
-			bridgeRot = 45;
-		}
-		if (OnBridgeRotate) OnBridgeRotate(bridgeRot);
-		break;
-	case 'E':
-		bridgeRot -= 1.0f;
-		if (bridgeRot <= 0) {
-			bridgeRot = 0;
-		}
-		if (OnBridgeRotate) OnBridgeRotate(bridgeRot);
-		break;
-	case VK_SPACE:
-		bridgeRot = 0.0f;
-		if (OnBridgeRotate) OnBridgeRotate(bridgeRot);
+	case 'P':
+		camSwitch *= -1;
 		break;
 	case VK_ESCAPE:
 		if (OnQuit) OnQuit();
@@ -221,42 +221,42 @@ void InputManager::Update()
 		camZ += sin(yawRad) * moveSpeed;
 	}
 
-	if (IsKeyPressed('R'))
+	if (IsKeyPressed('Q'))
 	{
 		camY += moveSpeed;
 	}
 
-	if (IsKeyPressed('F'))
+	if (IsKeyPressed('E'))
 	{
 		camY -= moveSpeed;
 	}
 
-	if (IsKeyPressed('U'))
+	if (IsKeyPressed('I'))
 	{
 		diffuseLightPosition[1] += lightMoveSpeed;
 		lightY = diffuseLightPosition[1];
 	}
-	if (IsKeyPressed('J'))
+	if (IsKeyPressed('K'))
 	{
 		diffuseLightPosition[1] -= lightMoveSpeed;
 		lightY = diffuseLightPosition[1];
 	}
-	if (IsKeyPressed('H'))
+	if (IsKeyPressed('J'))
 	{
 		diffuseLightPosition[0] -= lightMoveSpeed;
 		lightX = diffuseLightPosition[0];
 	}
-	if (IsKeyPressed('K'))
+	if (IsKeyPressed('L'))
 	{
 		diffuseLightPosition[0] += lightMoveSpeed;
 		lightX = diffuseLightPosition[0];
 	}
-	if (IsKeyPressed('Y'))
+	if (IsKeyPressed('U'))
 	{
 		diffuseLightPosition[2] += lightMoveSpeed;
 		lightZ = diffuseLightPosition[2];
 	}
-	if (IsKeyPressed('I'))
+	if (IsKeyPressed('O'))
 	{
 		diffuseLightPosition[2] -= lightMoveSpeed;
 		lightZ = diffuseLightPosition[2];
@@ -270,6 +270,34 @@ void InputManager::Update()
 			walkPhase = 0.0f;
 		}
 	}
+
+	// Head Rotation
+	if (IsKeyPressed('Z'))
+	{
+		robotHead->RotateY(-0.05f);
+	}
+	if (IsKeyPressed('X'))
+	{
+		robotHead->RotateY(0.05f);
+	}
+	if (IsKeyPressed('C'))
+	{
+		robotHead->RotateX(0.05f);
+	}
+	if (IsKeyPressed('V'))
+	{
+		robotHead->RotateX(-0.05f);
+	}
+
+	if (IsKeyPressed('Z')) { robotHead->RotateY(-0.05f); }
+	if (IsKeyPressed('X')) { robotHead->RotateY(0.05f); }
+	if (IsKeyPressed('C')) { robotHead->RotateX(0.05f); }
+	if (IsKeyPressed('V')) { robotHead->RotateX(-0.05f); }
+
+	if (IsKeyPressed('B')) { robotTorso->RotateY(-0.05f); }
+	if (IsKeyPressed('H')) { robotTorso->RotateY(0.05f); }
+	if (IsKeyPressed('N')) { robotTorso->RotateZ(0.05f); }
+	if (IsKeyPressed('M')) { robotTorso->RotateZ(-0.05f); }
 		
 	if (IsKeyPressed(VK_UP))
 	{

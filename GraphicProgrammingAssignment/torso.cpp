@@ -97,10 +97,7 @@ torso::torso()
     ringX = 0.0f;
     ringY = 0.0f;
 
-    GLfloat coreDiffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-    GLfloat coreSpecular[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    GLfloat coreEmission[] = { 0.6f, 0.9f, 1.0f, 1.0f };
-
+    lightOffset = 0.0f;
 }
 
 torso::~torso()
@@ -117,6 +114,59 @@ void torso::InitializeTorsoQuadratics()
     gluQuadricTexture(robotTorso, GL_TRUE);
     gluQuadricDrawStyle(robotTorso, GLU_FILL);
     gluQuadricNormals(robotTorso, GLU_SMOOTH);
+}
+
+// Light Effect
+void torso::DrawMovingLightSource()
+{
+    static float offset = 0.0f;
+    static bool forward = true;
+
+    // Update position
+    if (forward) {
+        offset += 0.00005f;
+        if (offset > 0.05f) forward = false;
+    }
+    else {
+        offset -= 0.00005f;
+        if (offset < 0.0f) forward = true;
+    }
+
+    // Position for the light
+    float lightX = 0.0f;
+    float lightY = 0.225f;
+    float lightZ = 0.1f + offset;
+
+    // OPTION 1: Create an OpenGL light that illuminates other objects
+    if (true) {  // Change to false if you don't want this
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT2);  // Use LIGHT2 to avoid conflicts
+
+        GLfloat lightPos[] = { lightX, lightY, lightZ, 1.0f };
+        GLfloat lightColor[] = { 0.6f, 0.7f, 0.8f, 1.0f };  // Orange light
+
+        glLightfv(GL_LIGHT2, GL_POSITION, lightPos);
+        glLightfv(GL_LIGHT2, GL_DIFFUSE, lightColor);
+        glLightfv(GL_LIGHT2, GL_SPECULAR, lightColor);
+    }
+
+    // OPTION 2: Draw a visible light bulb
+    glPushMatrix();
+    glTranslatef(lightX, lightY, lightZ);
+
+    // Disable textures for the light bulb
+    glDisable(GL_TEXTURE_2D);
+
+    // Draw light rays/glow
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    glDepthMask(GL_FALSE);
+
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
+    glEnable(GL_TEXTURE_2D);
+
+    glPopMatrix();
 }
 
 void torso::TorsoFrontPattern()
@@ -180,7 +230,6 @@ void torso::TorsoFrontPattern()
     DrawCube(0.05f);
     glPopMatrix();
 
-    // Robot Middle Light
     glBindTexture(GL_TEXTURE_2D, steelTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.225f, 0.1f);
@@ -215,6 +264,9 @@ void torso::TorsoFrontPattern()
     }
     glEnd();
     glPopMatrix();
+
+    // Breathe Light Effect
+    DrawMovingLightSource();
 }
 
 void torso::TorsoBackPattern()

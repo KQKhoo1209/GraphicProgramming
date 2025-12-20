@@ -3,6 +3,7 @@
 #include <gl/GLU.h>
 #include "torso.h"
 #include "head.h"
+#include "Weapon.h"
 #include "leg.h"
 #include "arm.h"
 
@@ -11,6 +12,7 @@ class Robot
 private:
     torso* robotTorso;
     head* robotHead;
+    Weapon* weapon;
 
     float robotPosX, robotPosY, robotPosZ;
     float robotRotY;
@@ -33,6 +35,7 @@ public:
 
     head* GetHead() { return robotHead; }
     torso* GetTorso() { return robotTorso; }
+    Weapon* GetWeapon() { return weapon; }
 
     float GetHeadRotationY() const { return headRotY; }
     float GetHeadRotationZ() const { return headRotZ; }

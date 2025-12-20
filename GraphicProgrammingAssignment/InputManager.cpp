@@ -113,12 +113,6 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 	case '5':
 		questionToDisplay = 4;
 		break;
-	case '6':
-		questionToDisplay = 5;
-		break;
-	case '7':
-		questionToDisplay = 6;
-		break;
 	case 'P':
 		camSwitch *= -1;
 		break;
@@ -278,17 +272,17 @@ void InputManager::Update()
 		}
 	}
 
-	/*if (robot) {
-		if (IsKeyPressed('Z')) { robot->RotateHeadY(-0.05f); }
+	if (robot) {
+		/*if (IsKeyPressed('Z')) { robot->RotateHeadY(-0.05f); }
 		if (IsKeyPressed('X')) { robot->RotateHeadY(0.05f); }
 		if (IsKeyPressed('C')) { robot->RotateHeadZ(0.05f); }
-		if (IsKeyPressed('V')) { robot->RotateHeadZ(-0.05f); }
+		if (IsKeyPressed('V')) { robot->RotateHeadZ(-0.05f); }*/
 
-		if (IsKeyPressed('B')) { robot->RotateTorsoY(-0.05f); }
-		if (IsKeyPressed('H')) { robot->RotateTorsoY(0.05f); }
-		if (IsKeyPressed('N')) { robot->RotateTorsoZ(0.05f); }
-		if (IsKeyPressed('M')) { robot->RotateTorsoZ(-0.05f); }
-	}*/
+		if (IsKeyPressed('7')) { robot->RotateTorsoY(-0.05f); }
+		if (IsKeyPressed('8')) { robot->RotateTorsoY(0.05f); }
+		if (IsKeyPressed('9')) { robot->RotateTorsoZ(0.05f); }
+		if (IsKeyPressed('0')) { robot->RotateTorsoZ(-0.05f); }
+	}
 		
 	if (IsKeyPressed(VK_UP))
 	{

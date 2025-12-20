@@ -4,6 +4,7 @@
 #include <math.h>
 #include "InputManager.h"
 #include "Robot.h"
+#include "torso.h"
 #include "leg.h"
 #include "arm.h"
 #include "texture.h"
@@ -219,14 +220,14 @@ void Display() // Render
 	{
 		// Light indicator (reuse existing light code)
 		glPushMatrix();
-		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
+		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1] + 1.0f, diffuseLightPosition[2]);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
 		gluSphere(var, 0.05f, 10, 10);
 		glPopMatrix();
 
 		if (robot)
-		{
+		{	
 			robot->DrawRobot();
 		}
 		break;

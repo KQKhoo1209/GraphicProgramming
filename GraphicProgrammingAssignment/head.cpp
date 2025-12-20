@@ -91,9 +91,11 @@ void DrawBottomFaceRing(int sides, float radius)
     }
 }
 
-head::head()
+head::head() : robotHead(nullptr)
 {
-	robotHead = gluNewQuadric();
+    headRotY = 0.0f;
+    headRotX = 0.0f;
+    robotHead = gluNewQuadric();
 }
 
 head::~head()
@@ -111,6 +113,21 @@ void head::InitializeHeadQuadratics()
     gluQuadricTexture(robotHead, GL_TRUE);
     gluQuadricDrawStyle(robotHead, GLU_FILL);
     gluQuadricNormals(robotHead, GLU_SMOOTH);
+}
+
+void head::RotateX(float delta)
+{
+    headRotX += delta;
+
+    if (headRotX > 15.0f)
+        headRotX = 15.0f;
+    else if (headRotX < -15.0f)
+        headRotX = -15.0f;
+}
+
+void head::RotateY(float delta)
+{
+    headRotY += delta;
 }
 
 void head::Eyes()
@@ -277,7 +294,8 @@ void head::DrawHead()
 {
     glPushMatrix();
         glTranslatef(0.0f, -0.015f, 0.0f);
-        //glRotatef(headrotY, 0.0f, 1.0f, 0.0f);
+        glRotatef(headRotY, 0.0f, 1.0f, 0.0f);
+        glRotatef(headRotX, 1.0f, 0.0f, 0.0f);
         HeadCover();
 
         glPushMatrix();

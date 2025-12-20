@@ -182,6 +182,3 @@ void DrawArm()
 
     glPopMatrix();
 }
-
-
-

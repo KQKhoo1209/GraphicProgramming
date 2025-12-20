@@ -1,6 +1,4 @@
 ﻿#include <Windows.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
 #include "head.h"
 #include "helperFunction.h"
 #include "texture.h"
@@ -93,8 +91,6 @@ void DrawBottomFaceRing(int sides, float radius)
 
 head::head() : robotHead(nullptr)
 {
-    headRotY = 0.0f;
-    headRotX = 0.0f;
     robotHead = gluNewQuadric();
 }
 
@@ -115,24 +111,9 @@ void head::InitializeHeadQuadratics()
     gluQuadricNormals(robotHead, GLU_SMOOTH);
 }
 
-void head::RotateX(float delta)
-{
-    headRotX += delta;
-
-    if (headRotX > 15.0f)
-        headRotX = 15.0f;
-    else if (headRotX < -15.0f)
-        headRotX = -15.0f;
-}
-
-void head::RotateY(float delta)
-{
-    headRotY += delta;
-}
-
 void head::Eyes()
 {
-    glDisable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, whiteMetalTexture);
     glPushMatrix();
     glTranslatef(0.0f, -0.025f, 0.0f);
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
@@ -140,7 +121,7 @@ void head::Eyes()
     gluSphere(robotHead, 0.1f, 20, 20);
     glPopMatrix();
 
-    BindTexture(carbonTexture);
+    glBindTexture(GL_TEXTURE_2D, carbonTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.075f, 0.12f);
     DrawCustomBox(
@@ -216,7 +197,7 @@ void head::Eyes()
 
 void head::MouthCover()
 {
-    BindTexture(carbonTexture);
+    glBindTexture(GL_TEXTURE_2D, carbonTexture);
     glPushMatrix();
     glTranslatef(0.0f, -0.275f, 0.175f);
     glRotatef(15, 1.0f, 0.0f, 0.0f);
@@ -267,7 +248,7 @@ void head::MouthCover()
 
 void head::HeadCover()
 {
-    BindTexture(whiteMetalTexture);
+    glBindTexture(GL_TEXTURE_2D, whiteMetalTexture);
     glPushMatrix();
     glTranslatef(0.0f, 0.185f, 0.0f);
     glScalef(1.0f, 0.8f, 1.0f);
@@ -292,10 +273,10 @@ void head::HeadCover()
 
 void head::DrawHead()
 {
+    glEnable(GL_TEXTURE_2D);
+
     glPushMatrix();
         glTranslatef(0.0f, -0.015f, 0.0f);
-        glRotatef(headRotY, 0.0f, 1.0f, 0.0f);
-        glRotatef(headRotX, 1.0f, 0.0f, 0.0f);
         HeadCover();
 
         glPushMatrix();
@@ -308,4 +289,6 @@ void head::DrawHead()
     glTranslatef(0.0f, 0.0f, 0.15f);
     MouthCover();
     glPopMatrix();
+
+    glDisable(GL_TEXTURE_2D);
 }

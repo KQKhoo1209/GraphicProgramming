@@ -1,38 +1,35 @@
 #pragma once
-#include <math.h>
 
 enum AnimState
 {
-	BOOT_ANIM,
-	IDLE_ANIM,
-	WALK_ANIM,
-	ATTACK_ANIM
+    IDLE_ANIM,
+    WALK_ANIM,
+    KNIFE_SEP_ANIM
 };
 
 class Animator
 {
 private:
-	AnimState state;
+    AnimState state = IDLE_ANIM;
 
-	float phase;
-	float speed;
+    float phase = 0.0f;
+    float speed = 6.0f;
+    float maxPhase = 6.28318f;
 
-	/*bool isWalking;
-	float walkPhase;
-
-	float hipAnim;
-	float kneeAnim;
-
-	float animSpeed;*/
-	float maxPhase;
+    float knifePhase = 0.0f;
 public:
-	Animator();
-	~Animator();
-	void AnimUpdate(float deltaTime);
+    Animator();
 
-	void RobotWalk();
-	void Stop();
+    void AnimUpdate(float dt);
 
-	float GetHipAngle(float side) const;
-	float GetKneeAngle(float side) const;
+    void RobotWalk();
+    void KnifeAnimation();
+    void Stop();
+
+    float GetHipAngle(float side) const;
+    float GetKneeAngle(float side) const;
+
+    float GetKnifeOffset(int index) const;
 };
+
+extern Animator animator;

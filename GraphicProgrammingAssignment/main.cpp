@@ -3,7 +3,7 @@
 #include <gl/GLU.h>
 #include <math.h>
 #include "InputManager.h"
-#include "AnimationManager.h"
+#include "Animator.h"
 #include "Robot.h"
 #include "torso.h"
 #include "leg.h"
@@ -278,7 +278,6 @@ void InitClass()
 {
 	robot = new Robot();
 	robot->InitializeRobotQuadratics();
-	robot->SetPosition(0.0f, 0.0f, 0.0f);
 
 	inputManager = new InputManager(robot);
 	inputManager->Initialize(hWnd, windowWidth, windowHeight);

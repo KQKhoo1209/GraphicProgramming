@@ -2,7 +2,7 @@
 #include <gl/GL.h>
 #include <math.h>
 #include "Robot.h"
-#include "AnimationManager.h"
+#include "Animator.h"
 #include "leg.h"
 #include "arm.h"
 
@@ -315,25 +315,23 @@ void InputManager::UpdateAnimation(float deltaTime)
 	if (IsKeyPressed('W'))
 	{
 		isWalking = true;
-		robot->MoveRobotZ(0.0005f);
+		robot->MoveRobot(0.0005f);
 	}
 
 	if (IsKeyPressed('S'))
 	{
 		isWalking = true;
-		robot->MoveRobotZ(-0.0005f);
+		robot->MoveRobot(-0.0005f);
 	}
 
 	if (IsKeyPressed('A'))
 	{
-		isWalking = true;
-		robot->MoveRobotX(-0.0005f);
+		robot->RotateRobot(-0.05f);
 	}
 
 	if (IsKeyPressed('D'))
 	{
-		isWalking = true;
-		robot->MoveRobotX(0.0005f);
+		robot->RotateRobot(0.05f);
 	}
 
 	if (isWalking) {

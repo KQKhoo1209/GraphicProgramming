@@ -8,7 +8,7 @@ Robot::Robot()
     : robotTorso(nullptr)
     , robotHead(nullptr)
     , weapon(nullptr)
-    , robotPosX(0.0f), robotPosY(0.0f), robotPosZ(0.0f)
+    , robotPosZ(0.0f)
     , robotRotY(0.0f)
     , torsoRotY(0.0f), torsoRotZ(0.0f)
     , headRotY(0.0f), headRotZ(0.0f)
@@ -35,26 +35,15 @@ void Robot::InitializeRobotQuadratics()
     weapon->InitializeWeaponQuadratics();
 }
 
-void Robot::SetPosition(float x, float y, float z)
+void Robot::MoveRobot(float delta)
 {
-    robotPosX = x;
-    robotPosY = y;
-    robotPosZ = z;
-}
+    float angleRad = (robotRotY * 3.14) / 180;
 
-void Robot::MoveRobotX(float delta)
-{
-    robotPosX += delta;
-}
+    float dx = sin(angleRad) * delta;
+    float dz = cos(angleRad) * delta;
 
-void Robot::MoveRobotY(float delta)
-{
-    robotPosY += delta;
-}
-
-void Robot::MoveRobotZ(float delta)
-{
-    robotPosZ += delta;
+    robotPosX += dx;
+    robotPosZ += dz;
 }
 
 void Robot::RotateRobot(float delta)
@@ -103,6 +92,8 @@ void Robot::RotateHeadZ(float delta)
 
 void Robot::ResetRotations()
 {
+    robotPosX = 0.0f;
+    robotPosZ = 0.0f;
     robotRotY = 0.0f;
     torsoRotY = 0.0f;
     torsoRotZ = 0.0f;
@@ -113,7 +104,7 @@ void Robot::ResetRotations()
 void Robot::DrawRobot()
 {
     glPushMatrix();
-    glTranslatef(robotPosX, robotPosY, robotPosZ);
+    glTranslatef(robotPosX, 0.0f, robotPosZ);
     glRotatef(robotRotY, 0.0f, 1.0f, 0.0f);
 
         glPushMatrix();
@@ -130,7 +121,7 @@ void Robot::DrawRobot()
             glPushMatrix();
             glTranslatef(0.0f, 1.225f, 0.0f);
             glRotatef(headRotY, 0.0f, 1.0f, 0.0f);
-            glRotatef(headRotZ, 0.0f, 0.0f, 1.0f);
+            glRotatef(headRotZ, 1.0f, 0.0f, 0.0f);
             robotHead->DrawHead();
             glPopMatrix();
 

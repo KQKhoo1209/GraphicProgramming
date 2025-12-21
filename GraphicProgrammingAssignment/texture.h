@@ -13,6 +13,8 @@ extern GLuint carbonTexture;
 extern GLuint darkBlueTexture;
 extern GLuint whiteMetalTexture;
 extern GLuint knifeTipTexture;
+extern GLuint crimsonWebTexture;
+extern GLuint slaughterTexture;
 
 void LoadTexture();
 void ReleaseTexture();

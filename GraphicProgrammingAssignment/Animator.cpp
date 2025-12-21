@@ -53,25 +53,17 @@ void Animator::RobotWalk()
 	state = WALK_ANIM;
 }
 
-// Add this to Animator.cpp
-
 float Animator::GetShoulderAngle(float side) const
 {
-    // 1. Priority: Knife Animation (Existing logic)
     if (state == KNIFE_SEP_ANIM)
     {
         return GetSpecialShoulderAngle();
     }
 
-    // 2. Walking Animation (New logic)
     if (state == WALK_ANIM)
     {
-        // Arms swing opposite to legs.
-        // Left Arm (side -1) needs offset PI (3.14) to be opposite to Left Leg (0.0)
-        // Right Arm (side 1) needs offset 0.0 to be opposite to Right Leg (3.14)
         float offset = (side < 0.0f) ? 3.14159f : 0.0f;
 
-        // Swing amplitude of 25 degrees
         return sin(phase + offset) * 25.0f;
     }
     return 0.0f;
@@ -157,21 +149,16 @@ float Animator::GetSpecialLegAngle(bool isLeft) const
 
 float Animator::GetSpecialShoulderAngle() const
 {
-    if (state != KNIFE_SEP_ANIM) return -60.0f;
+    if (state != KNIFE_SEP_ANIM) return -90.0f;
 
     if (knifePhase < 2.5f)
     {
-        return -20.0f + (sin(knifePhase * 10.0f) * 15.0f);
+        return -75.0f + (sin(knifePhase * 10.0f) * 15.0f);
     }
 
-    else
-    {
-        float t = (knifePhase - 2.5f) * 5.0f;
-        float angle = -20.0f + (60.0f * t);
-
-        if (angle > 0.0f) angle = 0.0f;
-        return angle;
-    }
+    float t = (knifePhase - 2.5f) * 5.0f;
+    float angle = -20.0f + (60.0f * t);
+    return (angle > 0.0f) ? 0.0f : angle;
 }
 
 float Animator::GetSpecialElbowAngle() const

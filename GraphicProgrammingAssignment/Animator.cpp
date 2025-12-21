@@ -10,6 +10,9 @@ Animator::Animator()
 	phase = 0.0f;
 	speed = 6.0f;
 	maxPhase = 6.28f;
+
+    jumpPhase = 0.0f;
+    knifePhase = 0.0f;
 }
 
 void Animator::AnimUpdate(float deltaTime)
@@ -22,14 +25,23 @@ void Animator::AnimUpdate(float deltaTime)
             phase -= maxPhase;
     }
 
+    if (state == JUMP_ANIM)
+    {
+        jumpPhase += deltaTime * 2.5f;
+
+        if (jumpPhase > 3.0f)
+        {
+            jumpPhase = 0.0f;
+            state = IDLE_ANIM;
+        }
+    }
+
     if (state == KNIFE_SEP_ANIM)
     {
-        // Speed 1.0f so 1.0 = 1 second
         knifePhase += deltaTime * 1.0f;
 
-        // Total time is roughly 4.5 to 5.0 seconds now
         if (knifePhase > 5.0f)
-        {
+        {   
             knifePhase = 0.0f;
             state = IDLE_ANIM;
         }
@@ -39,6 +51,34 @@ void Animator::AnimUpdate(float deltaTime)
 void Animator::RobotWalk()
 {
 	state = WALK_ANIM;
+}
+
+void Animator::RobotJump()
+{
+    if (state == IDLE_ANIM || state == WALK_ANIM)
+    {
+        state = JUMP_ANIM;
+        jumpPhase = 0.0f;
+    }
+}
+
+float Animator::GetJumpHeight() const
+{
+    if (state != JUMP_ANIM) return 0.0f;
+
+    if (jumpPhase < 0.5f) return 0.0f;
+    if (jumpPhase > 2.5f) return 0.0f;
+
+    float t = (jumpPhase - 0.5f) * (3.14159f / 2.0f);
+
+    return sin(t) * 2.0f;
+}
+
+float Animator::GetJumpKneeAngle() const
+{
+    if (state != JUMP_ANIM) return 0.0f;
+
+    return 30.0f * sin(jumpPhase);
 }
 
 void Animator::KnifeAnimation()
@@ -147,22 +187,40 @@ void Animator::Stop()
 
 float Animator::GetHipAngle(float side) const
 {
-    if (state == KNIFE_SEP_ANIM)
+    if (state == JUMP_ANIM)
     {
-        bool isLeft = (side < 0.0f);
-        return GetSpecialLegAngle(isLeft);
+        if (jumpPhase < 0.5f) {
+            return -30.0f * (jumpPhase / 0.5f);
+        }
+        else if (jumpPhase > 2.5f) {
+            return -30.0f * ((3.0f - jumpPhase) / 0.5f);
+        }
+        else {
+            return 0.0f;
+        }
     }
 
     if (state != WALK_ANIM) return 0.0f;
-
     float offset = (side < 0.0f) ? 0.0f : 3.14159f;
     return sin(phase + offset) * 25.0f;
 }
 
 float Animator::GetKneeAngle(float side) const
 {
-    if (state != WALK_ANIM) return 0.0f;
+    if (state == JUMP_ANIM)
+    {
+        if (jumpPhase < 0.5f) {
+            return 60.0f * (jumpPhase / 0.5f);
+        }
+        else if (jumpPhase > 2.5f) {
+            return 60.0f * ((3.0f - jumpPhase) / 0.5f);
+        }
+        else {
+            return 10.0f;
+        }
+    }
 
+    if (state != WALK_ANIM) return 0.0f; // If is not walking, knee rotation set to 0.0f
     float offset = (side < 0.0f) ? 0.0f : 3.14159f;
     return fabs(sin(phase + offset)) * 35.0f;
 }

@@ -15,7 +15,7 @@ Robot::Robot()
     , knifeCount(5)
     , legAngle(60)
     , leftSwing(0.0f), rightSwing(0.0f)
-    , leftRaise(-90.0f), rightRaise(-90.0f)
+    , leftRaise(0.0f), rightRaise(-90.0f)
     , leftElbow(0.0f), rightElbow(0.0f)
     , wristAngle(0.0f)
     , thumbAngle(0.0f)
@@ -60,7 +60,7 @@ void Robot::MoveRobot(float delta)
 void Robot::RotateRobot(float delta)
 {
     robotRotY += delta;
-    // Keep within 0-360 range
+
     if (robotRotY > 360.0f) robotRotY -= 360.0f;
     if (robotRotY < 0.0f) robotRotY += 360.0f;
 }
@@ -68,7 +68,7 @@ void Robot::RotateRobot(float delta)
 void Robot::RotateTorsoY(float delta)
 {
     torsoRotY += delta;
-    // Limit if needed
+
     if (torsoRotY > 45.0f) torsoRotY = 45.0f;
     else if (torsoRotY < -45.0f) torsoRotY = -45.0f;
 }
@@ -76,7 +76,7 @@ void Robot::RotateTorsoY(float delta)
 void Robot::RotateTorsoZ(float delta)
 {
     torsoRotZ += delta;
-    // Limit if needed
+
     if (torsoRotZ > 30.0f) torsoRotZ = 30.0f;
     else if (torsoRotZ < 0.0f) torsoRotZ = 0.0f;
 }
@@ -84,7 +84,7 @@ void Robot::RotateTorsoZ(float delta)
 void Robot::RotateHeadY(float delta)
 {
     headRotY += delta;
-    // Limit to ?0 degrees
+
     if (headRotY > 30.0f)
         headRotY = 30.0f;
     else if (headRotY < -30.0f)
@@ -94,7 +94,7 @@ void Robot::RotateHeadY(float delta)
 void Robot::RotateHeadZ(float delta)
 {
     headRotZ += delta;
-    // Limit to ?0 degrees
+
     if (headRotZ > 30.0f)
         headRotZ = 30.0f;
     else if (headRotZ < -30.0f)
@@ -248,26 +248,26 @@ void Robot::DrawRobot()
 
             if (animator.GetState() != IDLE_ANIM)
             {
-                // Walking/Animation controls the SWING (Forward/Back)
                 leftSwing = animator.GetShoulderAngle(-1.0f);
                 rightSwing = animator.GetShoulderAngle(1.0f);
 
-                // Arms stay down during walk
                 leftRaise = -90.0f;
                 rightRaise = -90.0f;
 
-                // Handle Knife Trick Exceptions
                 if (animator.GetState() == KNIFE_SEP_ANIM)
                 {
-                    leftSwing = 0.0f; // No swinging
+                    leftSwing = 0.0f;
+                    rightSwing = 0.0f;
+
                     leftRaise = animator.GetSpecialShoulderAngle(); // Use lift for knife trick
+                    rightRaise = leftRaise;
 
                     leftElbow = animator.GetSpecialElbowAngle();
-                    rightElbow = leftElbow;
+                    rightElbow = animator.GetSpecialElbowAngle();
+
                     wristAngle = 0.0f;
                 }
             }
-            // B. MANUAL MODE
             else
             {
                 leftRaise = -90.0f;

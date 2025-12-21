@@ -96,6 +96,7 @@ LRESULT InputManager::HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 
 void InputManager::HandleKeyDown(WPARAM wParam)
 {
+	// Windows Input, have delay when hold
 	switch (wParam)
 	{
 	case VK_TAB:
@@ -104,8 +105,12 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 	case 'P':
 		if (currentMode == CAMMOVEMENT_MODE) camSwitch *= -1;
 		break;
+	case 'F':
+		if (currentMode == ANIMATION_MODE) robot->StartSpecialAnimation();
+		break;
 	case VK_SPACE:
 		if (currentMode == ROBOTMOVEMENT_MODE) robot->ResetRotations();
+		if (currentMode == ANIMATION_MODE) robot->StartJump();
 		break;
 	case VK_ESCAPE:
 		PostQuitMessage(0);
@@ -274,35 +279,45 @@ void InputManager::UpdateRobotMovement()
 	}
 
 	// Arm Rotation
+	if (IsKeyPressed('A'))
+	{
+		robot->RotateLeftShoulder(-0.1f);
+	}
 	if (IsKeyPressed('Z'))
 	{
-		shoulderAngle += 0.1f;
-		if (shoulderAngle > 90.0f) shoulderAngle = 90.0f;
+		robot->RotateLeftShoulder(0.1f);
+	}
+	if (IsKeyPressed('S'))
+	{
+		robot->RotateRightShoulder(-0.1f);
 	}
 	if (IsKeyPressed('X'))
 	{
-		shoulderAngle -= 0.1f;
-		if (shoulderAngle < -45.0f) shoulderAngle = -45.0f;
+		robot->RotateRightShoulder(0.1f);
+	}
+	if (IsKeyPressed('D'))
+	{
+		robot->RotateLeftElbow(-0.1f);
 	}
 	if (IsKeyPressed('C'))
 	{
-		elbowAngle += 0.1f;
-		if (elbowAngle > 145.0f) elbowAngle = 145.0f;
+		robot->RotateLeftElbow(0.1f);
+	}
+	if (IsKeyPressed('F'))
+	{
+		robot->RotateRightElbow(-0.1f);
 	}
 	if (IsKeyPressed('V'))
 	{
-		elbowAngle -= 0.1f;
-		if (elbowAngle < 0.0f) elbowAngle = 0.0f;
+		robot->RotateRightElbow(0.1f);
 	}
 	if (IsKeyPressed('B'))
 	{
-		wristAngle += 0.1f;
-		if (wristAngle > 60.0f) wristAngle = 60.0f;
+		robot->RotateWrist(0.1f);
 	}
 	if (IsKeyPressed('N'))
 	{
-		wristAngle -= 0.1f;
-		if (wristAngle < -60.0f) wristAngle = -60.0f;
+		robot->RotateWrist(-0.1f);
 	}
 }
 
@@ -338,13 +353,13 @@ void InputManager::UpdateAnimation(float deltaTime)
 		animator.RobotWalk();
 	}
 	else {
-		animator.Stop();
+		if(animator.GetState() == WALK_ANIM) animator.Stop();
 	}
 }
 
 void InputManager::Update(float deltaTime)
 {
-	// Handle continuous key input for camera movement
+	// Handle continuous key input
 	yawRad = camYaw * (3.14159f / 180.0f);
 
 	if (currentMode == CAMMOVEMENT_MODE) 

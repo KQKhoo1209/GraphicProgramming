@@ -2,7 +2,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include <cmath>
-#include "AnimationManager.h"
+#include "Animator.h"
 #include "leg.h"
 #include "texture.h"
 

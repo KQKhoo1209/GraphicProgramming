@@ -2,13 +2,11 @@
 #include <gl/GL.h>
 #include <math.h>
 #include "Robot.h"
+#include "Animator.h"
 #include "leg.h"
 #include "arm.h"
 
 // External game state variables (these should be moved to a GameState class later)
-extern int questionToDisplay;
-extern float bridgeRot;
-extern int spherePoint;
 extern int camSwitch;
 extern GLfloat diffuseLightPosition[];
 
@@ -48,6 +46,8 @@ void InputManager::SetRobot(Robot* robotObj)
 InputManager::~InputManager()
 {
 }
+
+InputMode InputManager::currentMode = CAMMOVEMENT_MODE;
 
 void InputManager::Initialize(HWND hWnd, int windowWidth, int windowHeight)
 {
@@ -98,47 +98,14 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 {
 	switch (wParam)
 	{
-	case '1':
-		questionToDisplay = 0;
-		break;
-	case '2':
-		questionToDisplay = 1;
-		break;
-	case '3':
-		questionToDisplay = 2;
-		break;
-	case '4':
-		questionToDisplay = 3;
-		break;
-	case '5':
-		questionToDisplay = 4;
+	case VK_TAB:
+		currentMode = static_cast<InputMode>((currentMode + 1) % 3);
 		break;
 	case 'P':
-		camSwitch *= -1;
+		if (currentMode == CAMMOVEMENT_MODE) camSwitch *= -1;
 		break;
-	case 'Z':
-		shoulderAngle += 5.0f;
-		if (shoulderAngle > 90.0f) shoulderAngle = 90.0f;
-		break;
-	case 'X':
-		shoulderAngle -= 5.0f;
-		if (shoulderAngle < -45.0f) shoulderAngle = -45.0f;
-		break;
-	case 'C':
-		elbowAngle += 5.0f;
-		if (elbowAngle > 145.0f) elbowAngle = 145.0f;
-		break;
-	case 'V':
-		elbowAngle -= 5.0f;
-		if (elbowAngle < 0.0f) elbowAngle = 0.0f;
-		break;
-	case 'B':
-		wristAngle += 5.0f;
-		if (wristAngle > 60.0f) wristAngle = 60.0f;
-		break;
-	case 'N':
-		wristAngle -= 5.0f;
-		if (wristAngle < -60.0f) wristAngle = -60.0f;
+	case VK_SPACE:
+		if (currentMode == ROBOTMOVEMENT_MODE) robot->ResetRotations();
 		break;
 	case VK_ESCAPE:
 		PostQuitMessage(0);
@@ -196,11 +163,9 @@ void InputManager::CenterMouseCursor(HWND hWnd)
 	SetCursorPos(center.x, center.y);
 }
 
-void InputManager::Update()
+// Camera And Light Movement
+void InputManager::UpdateCamLightMovement()
 {
-	// Handle continuous key input for camera movement
-	yawRad = camYaw * (3.14159f / 180.0f);
-
 	if (IsKeyPressed('W'))
 	{
 		camX += sin(yawRad) * moveSpeed;
@@ -262,28 +227,23 @@ void InputManager::Update()
 		diffuseLightPosition[2] -= lightMoveSpeed;
 		lightZ = diffuseLightPosition[2];
 	}
+}
 
-	if (IsKeyPressed('G'))
-	{
-		if (!isWalking)
-		{
-			isWalking = true;
-			walkPhase = 0.0f;
-		}
-	}
-
+// Robot Movement and Rotation
+void InputManager::UpdateRobotMovement()
+{
 	if (robot) {
-		/*if (IsKeyPressed('Z')) { robot->RotateHeadY(-0.05f); }
-		if (IsKeyPressed('X')) { robot->RotateHeadY(0.05f); }
-		if (IsKeyPressed('C')) { robot->RotateHeadZ(0.05f); }
-		if (IsKeyPressed('V')) { robot->RotateHeadZ(-0.05f); }*/
+		if (IsKeyPressed('1')) { robot->RotateHeadY(-0.05f); }
+		if (IsKeyPressed('2')) { robot->RotateHeadY(0.05f); }
+		if (IsKeyPressed('3')) { robot->RotateHeadZ(0.05f); }
+		if (IsKeyPressed('4')) { robot->RotateHeadZ(-0.05f); }
 
-		if (IsKeyPressed('7')) { robot->RotateTorsoY(-0.05f); }
-		if (IsKeyPressed('8')) { robot->RotateTorsoY(0.05f); }
-		if (IsKeyPressed('9')) { robot->RotateTorsoZ(0.05f); }
-		if (IsKeyPressed('0')) { robot->RotateTorsoZ(-0.05f); }
+		if (IsKeyPressed('5')) { robot->RotateTorsoY(-0.05f); }
+		if (IsKeyPressed('6')) { robot->RotateTorsoY(0.05f); }
+		if (IsKeyPressed('7')) { robot->RotateTorsoZ(0.05f); }
+		if (IsKeyPressed('8')) { robot->RotateTorsoZ(-0.05f); }
 	}
-		
+
 	if (IsKeyPressed(VK_UP))
 	{
 		kneeRotation += 0.1f;
@@ -311,6 +271,93 @@ void InputManager::Update()
 		if (hipRotation <= -45.0f) {
 			hipRotation = -45.0f;
 		}
+	}
+
+	// Arm Rotation
+	if (IsKeyPressed('Z'))
+	{
+		shoulderAngle += 0.1f;
+		if (shoulderAngle > 90.0f) shoulderAngle = 90.0f;
+	}
+	if (IsKeyPressed('X'))
+	{
+		shoulderAngle -= 0.1f;
+		if (shoulderAngle < -45.0f) shoulderAngle = -45.0f;
+	}
+	if (IsKeyPressed('C'))
+	{
+		elbowAngle += 0.1f;
+		if (elbowAngle > 145.0f) elbowAngle = 145.0f;
+	}
+	if (IsKeyPressed('V'))
+	{
+		elbowAngle -= 0.1f;
+		if (elbowAngle < 0.0f) elbowAngle = 0.0f;
+	}
+	if (IsKeyPressed('B'))
+	{
+		wristAngle += 0.1f;
+		if (wristAngle > 60.0f) wristAngle = 60.0f;
+	}
+	if (IsKeyPressed('N'))
+	{
+		wristAngle -= 0.1f;
+		if (wristAngle < -60.0f) wristAngle = -60.0f;
+	}
+}
+
+// Animation
+void InputManager::UpdateAnimation(float deltaTime)
+{
+	bool isWalking = false;
+	float step = 2.0f * deltaTime;
+
+	if (IsKeyPressed('W'))
+	{
+		isWalking = true;
+		robot->MoveRobot(0.0005f);
+	}
+
+	if (IsKeyPressed('S'))
+	{
+		isWalking = true;
+		robot->MoveRobot(-0.0005f);
+	}
+
+	if (IsKeyPressed('A'))
+	{
+		robot->RotateRobot(-0.05f);
+	}
+
+	if (IsKeyPressed('D'))
+	{
+		robot->RotateRobot(0.05f);
+	}
+
+	if (isWalking) {
+		animator.RobotWalk();
+	}
+	else {
+		animator.Stop();
+	}
+}
+
+void InputManager::Update(float deltaTime)
+{
+	// Handle continuous key input for camera movement
+	yawRad = camYaw * (3.14159f / 180.0f);
+
+	if (currentMode == CAMMOVEMENT_MODE) 
+	{
+		UpdateCamLightMovement();
+	}
+	else if (currentMode == ROBOTMOVEMENT_MODE)
+	{
+		UpdateRobotMovement();
+	}
+	else 
+	{
+		UpdateAnimation(deltaTime);
 	}
 }
 

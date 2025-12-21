@@ -6,6 +6,13 @@
 class Camera;
 class Robot;
 
+enum InputMode
+{
+	CAMMOVEMENT_MODE,
+	ROBOTMOVEMENT_MODE,
+	ANIMATION_MODE
+};
+
 class InputManager
 {
 private:
@@ -41,11 +48,17 @@ private:
 	void HandleMouseMove(HWND hWnd, LPARAM lParam);
 	void CenterMouseCursor(HWND hWnd);
 
+	void UpdateCamLightMovement();
+	void UpdateRobotMovement();
+	void UpdateAnimation(float deltaTime);
+
 	Robot* robot;
 
 public:
 	InputManager(Robot* robotObj);
 	~InputManager();
+
+	static InputMode currentMode;
 
 	// Initialize input manager with window handle and dimensions
 	void Initialize(HWND hWnd, int windowWidth, int windowHeight);
@@ -54,7 +67,7 @@ public:
 	LRESULT HandleMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	// Update function (called each frame for continuous input)
-	void Update();
+	void Update(float deltaTime);
 
 	// Getters for camera movement
 	float GetMoveSpeed() const { return moveSpeed; }

@@ -46,6 +46,16 @@ void Animator::AnimUpdate(float deltaTime)
             state = IDLE_ANIM;
         }
     }
+
+    if (state == SWING_KNIFE_ANIM)
+    {
+        swingPhase += deltaTime * 1.0f;
+        if (swingPhase > 3.0f)
+        {
+            swingPhase = 0.0f;
+            state = IDLE_ANIM;
+        }
+    }
 }
 
 void Animator::RobotWalk()
@@ -191,11 +201,6 @@ float Animator::GetKnifeScale(int index) const
     return scale;
 }
 
-void Animator::Stop()
-{
-	state = IDLE_ANIM;
-}
-
 float Animator::GetHipAngle(float side) const
 {
     // Jumping Logic
@@ -244,4 +249,72 @@ float Animator::GetKneeAngle(float side) const
     if (state != WALK_ANIM) return 0.0f;
     float offset = (side < 0.0f) ? 0.0f : 3.14159f;
     return fabs(sin(phase + offset)) * 35.0f;
+}
+
+void Animator::SwingKnives()
+{
+    if (state == IDLE_ANIM || state == WALK_ANIM)
+    {
+        state = SWING_KNIFE_ANIM;
+        swingPhase = 0.0f;
+    }
+}
+
+float Animator::GetSwingShoulderAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    // side: -1 ×óÊÖ, 1 ÓÒÊÖ
+    // ½×¶Î»®·Ö: Ì§µ¶ 0~1, Õ¶»÷ 1~2, ÊÕµ¶ 2~3
+    if (swingPhase < 1.0f)          // Ì§µ¶
+        return (side * -1.0f) * (-60.0f + swingPhase * 40.0f); // ×óÓÒÊÖ¶Ô³ÆÌ§µ¶
+    else if (swingPhase < 2.0f)     // Õ¶»÷
+        return (side * -1.0f) * (-20.0f + (swingPhase - 1.0f) * 60.0f);
+    else                            // ÊÕµ¶
+        return (side * -1.0f) * (40.0f - (swingPhase - 2.0f) * 40.0f);
+}
+
+float Animator::GetSwingElbowAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    if (swingPhase < 1.0f)          // ÍäÇúÊÕ½ô
+        return -90.0f + swingPhase * 30.0f;
+    else if (swingPhase < 2.0f)     // ºáÕ¶±£³Ö
+        return -60.0f;
+    else                            // ÊÕµ¶
+        return -60.0f + (swingPhase - 2.0f) * 60.0f;
+}
+
+float Animator::GetSwingWristAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    if (swingPhase < 0.5f)
+        return side * (10.0f * swingPhase / 0.5f);  // ÊÖÍóÌ§Æð
+    else if (swingPhase < 2.0f)
+        return side * (-30.0f);                     // ºáÉ¨
+    else
+        return 0.0f;                                // ÊÕµ¶
+}
+
+float Animator::GetSwingFingerAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    // ÎÕµ¶ÊÖÖ¸ÍäÇú 80¡ã
+    return 80.0f;
+}
+
+float Animator::GetSwingThumbAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    // Ä´Ö¸¹Ì¶¨ÎÕµ¶ 30¡ã
+    return -30.0f;
+}
+
+void Animator::Stop()
+{
+    state = IDLE_ANIM;
 }

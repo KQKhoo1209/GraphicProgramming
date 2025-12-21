@@ -22,9 +22,9 @@ private:
     float leftSwing, rightSwing;
     float leftRaise, rightRaise;
     float leftElbow, rightElbow;
-    float wristAngle;
-    float fingerAngles[4];
-    float thumbAngle;
+    float leftWristAngle, rightWristAngle;
+    float leftFingerAngles[4], rightFingerAngles[4];
+    float leftThumbAngle, rightThumbAngle;
 
     // For Knife Animation
     int knifeCount;
@@ -45,9 +45,12 @@ public:
     void RotateRightShoulder(float delta);
     void RotateLeftElbow(float delta);
     void RotateRightElbow(float delta);
-    void RotateWrist(float delta);
-    void RotateFingers(float delta, int fingerIndex);
-    void RotateThumb(float delta);
+    void RotateLeftWrist(float delta);
+	void RotateRightWrist(float delta);
+    void RotateLeftFingers(float delta, int fingerIndex);
+	void RotateRightFingers(float delta, int fingerIndex);
+    void RotateLeftThumb(float delta);
+	void RotateRightThumb(float delta);
     void ResetRotations();
 
     head* GetHead() { return robotHead; }
@@ -71,4 +74,5 @@ public:
     void Update(float deltaTime);
     void StartJump();
     void StartSpecialAnimation();
+	void StartSwingKnife();
 };

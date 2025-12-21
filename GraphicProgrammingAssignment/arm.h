@@ -1,5 +1,6 @@
 #pragma once
-void DrawArm();
+void DrawHand(const float* fingerAngles, float thumbAngle);
+void DrawArm(float shoulder, float elbow, float wrist, const float* fingerAngles, float thumbAngle);
 
 extern float shoulderAngle;
 extern float elbowAngle;

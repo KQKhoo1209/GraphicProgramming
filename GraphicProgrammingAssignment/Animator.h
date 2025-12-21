@@ -29,7 +29,15 @@ public:
     float GetHipAngle(float side) const;
     float GetKneeAngle(float side) const;
 
+    // Knife Spawning Animation
+    AnimState GetState() const { return state; }
+    float GetKnifeScale(int index) const;
     float GetKnifeOffset(int index) const;
+    float GetSpecialHeadAngle() const;
+    float GetSpecialTorsoAngle() const;
+    float GetSpecialLegAngle(bool isLeft) const;
+    float GetSpecialShoulderAngle() const;
+    float GetSpecialElbowAngle() const;
 };
 
 extern Animator animator;

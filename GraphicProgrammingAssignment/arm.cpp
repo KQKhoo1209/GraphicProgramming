@@ -4,17 +4,18 @@
 #include "arm.h"
 #include "texture.h"
 #include <math.h>
+#include "Robot.h"
 
 GLfloat rColor[] = { 1.0f, 0.0f, 0.0f };
 GLfloat gColor[] = { 0.0f, 1.0f, 0.0f };
 GLfloat bColor[] = { 0.0f, 0.0f, 1.0f };
 
 
-float shoulderAngle = 0.0f;
-float elbowAngle = 0.0f;
-float wristAngle = 0.0f;
-float fingerAngles[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-float thumbAngle = 0.0f;
+//float shoulderAngle = 0.0f;
+//float elbowAngle = 0.0f;
+//float wristAngle = 0.0f;
+//float fingerAngles[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+//float thumbAngle = 0.0f;
 
 
 void CalculateNormalVector(float x1, float y1, float z1, float x2, float y2, float z2, float x3, float y3, float z3) {
@@ -83,7 +84,7 @@ void DrawCube()
     glEnd();
 }
 
-void DrawHand()
+void DrawHand(const float* fingerAngles, float thumbAngle)
 {
     glPushMatrix();
 
@@ -154,14 +155,18 @@ void DrawArmSegment(float length, float thicknessY, float thicknessZ)
 }
 
 
-void DrawArm()
+// Remove or ignore the global variables at the top for these calculations
+// float shoulderAngle = 0.0f; <--- We will pass this in now
+
+void DrawArm(float shoulder, float elbow, float wrist, const float* fingerAngles, float thumbAngle)
 {
     GLUquadric* joint = gluNewQuadric();
     glPushMatrix();
 
     // ===== Shoulder =====
     glTranslatef(-0.3f, 0.0f, 0.0f);
-    glRotatef(shoulderAngle, 0, 0, 1);
+
+    glRotatef(shoulder, 0.0f, 0.0f, 1.0f);
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, rColor);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, rColor);
 
@@ -181,7 +186,7 @@ void DrawArm()
     gluSphere(joint, 0.4, 16, 16);
     glPopMatrix();
 
-    glRotatef(elbowAngle, 0, 0, 1);
+    glRotatef(elbow, 0.0f, 0.0f, 1.0f);
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, gColor);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, gColor);
 
@@ -195,13 +200,12 @@ void DrawArm()
     gluSphere(joint, 0.3, 16, 16);
     glPopMatrix();
 
-    glRotatef(wristAngle, 0, 0, 1);
+    glRotatef(wrist, 0.0f, 0.0f, 1.0f);
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, bColor);
     glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, bColor);
 
-
     // Hand
-    DrawHand();
+    DrawHand(fingerAngles, thumbAngle);
 
     gluDeleteQuadric(joint);
     glPopMatrix();

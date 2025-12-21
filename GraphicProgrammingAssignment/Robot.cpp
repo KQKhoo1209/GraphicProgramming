@@ -136,11 +136,23 @@ void Robot::ResetRotations()
     torsoRotZ = 0.0f;
     headRotY = 0.0f;
     headRotZ = 0.0f;
+    shoulderAngle = -90.0f;
+    elbowAngle = 0.0f;
+    wristAngle = 0.0f;
+    fingerAngles[0, 1, 2, 3] = 0.0f;
+    thumbAngle = 0.0f;
+    hipRotation = 0.0f;
+    kneeRotation = 0.0f;
 }
 
 void Robot::Update(float deltaTime)
 {
     animator.AnimUpdate(deltaTime);
+}
+
+void Robot::StartJump()
+{
+    animator.RobotJump();
 }
 
 void Robot::StartSpecialAnimation()
@@ -153,7 +165,11 @@ void Robot::DrawRobot()
     bool isSpecialAnim = (animator.GetState() == KNIFE_SEP_ANIM);
 
     glPushMatrix();
-    glTranslatef(robotPosX, 0.0f, robotPosZ);
+
+    float jumpY = animator.GetJumpHeight();
+    hipRotation = animator.GetJumpKneeAngle();
+
+    glTranslatef(robotPosX, 0.0f + jumpY, robotPosZ);
     glRotatef(robotRotY, 0.0f, 1.0f, 0.0f);
 
         glPushMatrix();

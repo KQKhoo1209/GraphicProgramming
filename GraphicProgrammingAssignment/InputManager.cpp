@@ -110,6 +110,7 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 		break;
 	case VK_SPACE:
 		if (currentMode == ROBOTMOVEMENT_MODE) robot->ResetRotations();
+		if (currentMode == ANIMATION_MODE) robot->StartJump();
 		break;
 	case VK_ESCAPE:
 		PostQuitMessage(0);

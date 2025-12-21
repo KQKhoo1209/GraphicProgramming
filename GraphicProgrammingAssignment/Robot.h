@@ -64,6 +64,8 @@ public:
     float GetFingerAngles() const { return fingerAngle; }
     float GetThumbAngle() const { return thumbAngle; }
 
+    // Animation
     void Update(float deltaTime);
+    void StartJump();
     void StartSpecialAnimation();
 };

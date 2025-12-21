@@ -1,8 +1,12 @@
 #include "Animator.h"
+#include <cmath>
+#include "Timer.h"
+
+Animator animator;
 
 Animator::Animator()
 {
-	state = BOOT_ANIM;
+	state = IDLE_ANIM;
 	phase = 0.0f;
 	speed = 6.0f;
 
@@ -16,10 +20,6 @@ Animator::Animator()
 	maxPhase = 6.28f;
 }
 
-Animator::~Animator()
-{
-}
-
 void Animator::AnimUpdate(float deltaTime)
 {
     if (state == WALK_ANIM)
@@ -29,11 +29,36 @@ void Animator::AnimUpdate(float deltaTime)
         if (phase >= maxPhase)
             phase -= maxPhase;
     }
+
+    if (state == KNIFE_SEP_ANIM)
+    {
+        knifePhase += deltaTime * 3.0f;
+        if (knifePhase > 1.0f)
+            knifePhase = 1.0f;
+    }
 }
 
 void Animator::RobotWalk()
 {
 	state = WALK_ANIM;
+}
+
+void Animator::KnifeAnimation()
+{
+    state = KNIFE_SEP_ANIM;
+
+}
+
+float Animator::GetKnifeOffset(int index) const
+{
+    if (state != KNIFE_SEP_ANIM)
+        return 0.0f;
+
+    float delay = index * 0.15f;
+    float t = knifePhase - delay;
+    if (t < 0.0f) t = 0.0f;
+
+    return t * 0.25f;
 }
 
 void Animator::Stop()

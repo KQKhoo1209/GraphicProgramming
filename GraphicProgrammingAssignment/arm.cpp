@@ -13,7 +13,7 @@ GLfloat bColor[] = { 0.0f, 0.0f, 1.0f };
 float shoulderAngle = 0.0f;
 float elbowAngle = 0.0f;
 float wristAngle = 0.0f;
-float fingerAngles[3] = { 0.0f, 0.0f, 0.0f };
+float fingerAngles[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 float thumbAngle = 0.0f;
 
 
@@ -87,98 +87,122 @@ void DrawHand()
 {
     glPushMatrix();
 
-    // Palm
+    // ===== Palm=====
     glPushMatrix();
-    glScalef(0.22f, 0.12f, 0.18f);
+    glTranslatef(0.15f, 0.0f, 0.0f);
+    glScalef(0.30f, 0.08f, 0.16f);
     DrawCube();
     glPopMatrix();
 
-    // Finger
-    float startY = 0.05f;
-    for (int i = 0; i < 3; ++i)
+    // ===== Fingers =====
+    float fingerZ[4] = { 0.06f, 0.02f, -0.02f, -0.06f };
+    for (int i = 0; i < 4; i++)
     {
         glPushMatrix();
-        glTranslatef(0.1f, startY - i * 0.05f, -0.05f);
-        glRotatef(fingerAngles[i], 0.0f, 0.0f, 1.0f);
-        glTranslatef(0.06f, 0.0f, 0.0f);
-        glScalef(0.1f, 0.025f, 0.025f);
+		glTranslatef(0.3f, 0.035f, fingerZ[i]); // position of each finger
+        glRotatef(fingerAngles[i], 0, 0, 1);
+
+        glPushMatrix();
+        glTranslatef(0.04f, 0, 0);
+        glScalef(0.08f, 0.025f, 0.025f);
         DrawCube();
+        glPopMatrix();
+
+        glTranslatef(0.08f, 0, 0);
+        glRotatef(fingerAngles[i] * 0.6f, 0, 0, 1);
+        glPushMatrix();
+        glTranslatef(0.03f, 0, 0);
+        glScalef(0.06f, 0.022f, 0.022f);
+        DrawCube();
+        glPopMatrix();
+
         glPopMatrix();
     }
 
-    // Thumb
+    // ===== Thumb =====
     glPushMatrix();
-    glTranslatef(0.05f, -0.05f, 0.03f);
-    glRotatef(thumbAngle, 0.0f, 0.0f, 1.0f);
-    glTranslatef(0.05f, 0.0f, 0.0f);
-    glScalef(0.1f, 0.03f, 0.03f);
+    glTranslatef(0.2f, 0.0f, 0.05f);
+    glRotatef(-40.0f, 0, 1, 0);
+    glRotatef(thumbAngle, 0, 0, 1);
+
+    glPushMatrix();
+    glTranslatef(0.05f, 0, 0);
+    glScalef(0.08f, 0.03f, 0.03f);
     DrawCube();
+    glPopMatrix();
+
+    glTranslatef(0.08f, 0, 0);
+    glRotatef(thumbAngle * 0.6f, 0, 0, 1);
+    glPushMatrix();
+    glTranslatef(0.03f, 0, 0);
+    glScalef(0.06f, 0.028f, 0.028f);
+    DrawCube();
+    glPopMatrix();
+
     glPopMatrix();
 
     glPopMatrix();
 }
 
-
-void DrawArmSegment(float length)
+void DrawArmSegment(float length, float thicknessY, float thicknessZ)
 {
     glPushMatrix();
-    glScalef(length, 0.18f, 0.12f);
-    glTranslatef(0.5f, 0.0f, 0.0f);
+    glTranslatef(length * 0.5f, 0.0f, 0.0f);
+    glScalef(length, thicknessY, thicknessZ);
     DrawCube();
     glPopMatrix();
 }
+
 
 void DrawArm()
 {
-    GLUquadric* q = gluNewQuadric();
-
+    GLUquadric* joint = gluNewQuadric();
     glPushMatrix();
 
     // ===== Shoulder =====
     glTranslatef(-0.3f, 0.0f, 0.0f);
-    glRotatef(shoulderAngle, 0.0f, 0.0f, 1.0f);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, rColor);
+    glRotatef(shoulderAngle, 0, 0, 1);
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, rColor);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, rColor);
 
-    // ===== Shoulder Joint =====
+    // Shoulder joint
     glPushMatrix();
     glScalef(0.1f, 0.1f, 0.1f);
-    gluSphere(q, 0.4, 16, 16);
+    gluSphere(joint, 0.4, 16, 16);
     glPopMatrix();
 
-    DrawArmSegment(0.6f);
-
-    glTranslatef(0.6f, 0.0f, 0.0f);
-
-    // ===== Elbow Joint =====
-    glPushMatrix();
-    glScalef(0.1f, 0.1f, 0.1f);
-    gluSphere(q, 0.4, 16, 16);
-    gluDeleteQuadric(q);
-    glPopMatrix();
+    // Upper arm
+    DrawArmSegment(0.55f, 0.12f, 0.10f);
+    glTranslatef(0.55f, 0, 0);
 
     // ===== Elbow =====
-    glRotatef(elbowAngle, 0.0f, 0.0f, 1.0f);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, gColor);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, gColor);
-    DrawArmSegment(0.6f);
-
-    glTranslatef(0.6f, 0.0f, 0.0f);
-
-    // ===== Wrist Joint =====
     glPushMatrix();
     glScalef(0.1f, 0.1f, 0.1f);
-    DrawCube();
+    gluSphere(joint, 0.4, 16, 16);
     glPopMatrix();
+
+    glRotatef(elbowAngle, 0, 0, 1);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, gColor);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, gColor);
+
+    // Forearm
+    DrawArmSegment(0.45f, 0.11f, 0.09f);
+    glTranslatef(0.45f, 0, 0);
 
     // ===== Wrist =====
     glPushMatrix();
-    glTranslatef(0.05f, 0.0f, 0.0f);
-    glRotatef(wristAngle, 0.0f, 0.0f, 1.0f);
-    glTranslatef(0.08f, 0.0f, 0.0f);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, bColor);
+    glScalef(0.08f, 0.08f, 0.08f);
+    gluSphere(joint, 0.3, 16, 16);
+    glPopMatrix();
+
+    glRotatef(wristAngle, 0, 0, 1);
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, bColor);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, bColor);
+
+
+    // Hand
     DrawHand();
 
+    gluDeleteQuadric(joint);
     glPopMatrix();
 }

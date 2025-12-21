@@ -40,7 +40,7 @@ void Animator::AnimUpdate(float deltaTime)
     {
         knifePhase += deltaTime * 1.0f;
 
-        if (knifePhase > 5.0f)
+        if (knifePhase > 3.0f)
         {   
             knifePhase = 0.0f;
             state = IDLE_ANIM;
@@ -49,8 +49,8 @@ void Animator::AnimUpdate(float deltaTime)
 
     if (state == SWING_KNIFE_ANIM)
     {
-        swingPhase += deltaTime * 1.0f;
-        if (swingPhase > 3.0f)
+        swingPhase += deltaTime * 0.5f;
+        if (swingPhase > 1.5f)
         {
             swingPhase = 0.0f;
             state = IDLE_ANIM;
@@ -262,56 +262,64 @@ void Animator::SwingKnives()
 
 float Animator::GetSwingShoulderAngle(float side) const
 {
+	float t, startAngle, targetAngle;
     if (state != SWING_KNIFE_ANIM) return 0.0f;
 
-    // side: -1 左手, 1 右手
-    // 阶段划分: 抬刀 0~1, 斩击 1~2, 收刀 2~3
-    if (swingPhase < 1.0f)          // 抬刀
-        return (side * -1.0f) * (-60.0f + swingPhase * 40.0f); // 左右手对称抬刀
-    else if (swingPhase < 2.0f)     // 斩击
-        return (side * -1.0f) * (-20.0f + (swingPhase - 1.0f) * 60.0f);
-    else                            // 收刀
-        return (side * -1.0f) * (40.0f - (swingPhase - 2.0f) * 40.0f);
+    if (swingPhase < 0.4f) {
+        return side * -30.0f;
+    }
+    else if (swingPhase < 1.0f) { 
+        t = (swingPhase - 0.4f) / 0.6f;
+        startAngle = side * -30.0f;
+        targetAngle = 0.0f;
+        return startAngle + t * (targetAngle - startAngle);
+    }
+    else {
+        t = (swingPhase - 1.0f) / 0.5f;
+        startAngle = 0.0f;
+        targetAngle = side * -90.0f;
+        return startAngle + t * (targetAngle - startAngle);
+    }
 }
 
 float Animator::GetSwingElbowAngle(float side) const
 {
     if (state != SWING_KNIFE_ANIM) return 0.0f;
 
-    if (swingPhase < 1.0f)          // 弯曲收紧
-        return -90.0f + swingPhase * 30.0f;
-    else if (swingPhase < 2.0f)     // 横斩保持
-        return -60.0f;
-    else                            // 收刀
-        return -60.0f + (swingPhase - 2.0f) * 60.0f;
+    if (swingPhase < 0.4f) {
+        return side * -90.0f;
+    }
+    else if (swingPhase < 1.0f) {
+        float t = (swingPhase - 0.4f) / 0.6f;
+        float startAngle = side * -90.0f;
+        float targetAngle = 0.0f; 
+        return startAngle + t * (targetAngle - startAngle);
+    }
+    else {
+        float t = (swingPhase - 1.0f) / 0.5f;
+        float startAngle = 0.0f;
+        float targetAngle = side * -90.0f;
+        return startAngle + t * (targetAngle - startAngle);
+    }
 }
 
 float Animator::GetSwingWristAngle(float side) const
 {
     if (state != SWING_KNIFE_ANIM) return 0.0f;
 
-    if (swingPhase < 0.5f)
-        return side * (10.0f * swingPhase / 0.5f);  // 手腕抬起
-    else if (swingPhase < 2.0f)
-        return side * (-30.0f);                     // 横扫
-    else
-        return 0.0f;                                // 收刀
+    return 0.0f; 
 }
 
 float Animator::GetSwingFingerAngle(float side) const
 {
     if (state != SWING_KNIFE_ANIM) return 0.0f;
-
-    // 握刀手指弯曲 80°
-    return 80.0f;
+    return -80.0f;
 }
 
 float Animator::GetSwingThumbAngle(float side) const
 {
     if (state != SWING_KNIFE_ANIM) return 0.0f;
-
-    // 拇指固定握刀 30°
-    return -30.0f;
+    return -40.0f;
 }
 
 void Animator::Stop()

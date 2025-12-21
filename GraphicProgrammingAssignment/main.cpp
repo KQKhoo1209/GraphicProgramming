@@ -373,12 +373,14 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		timer.Tick();
 		float dt = timer.GetDeltaTime();
 
-		// Update input manager (handles continuous key input)
 		if (inputManager)
 		{
 			inputManager->Update(dt);
-			animator.AnimUpdate(dt);
-			
+		}
+
+		if (robot)
+		{
+			robot->Update(dt);
 		}
 
 		Display();

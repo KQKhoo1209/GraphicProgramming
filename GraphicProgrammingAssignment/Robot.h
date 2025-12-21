@@ -14,11 +14,21 @@ private:
     head* robotHead;
     Weapon* weapon;
 
+    // Robot Position & Rotation
     float robotPosX, robotPosZ;
     float robotRotY;
     float torsoRotY, torsoRotZ;
     float headRotY, headRotZ;
+    float leftSwing, rightSwing;
+    float leftRaise, rightRaise;
+    float leftElbow, rightElbow;
+    float wristAngle;
+    float fingerAngles[4];
+    float thumbAngle;
 
+    // For Knife Animation
+    int knifeCount;
+    float legAngle;
 public:
     Robot();
     ~Robot();
@@ -31,6 +41,13 @@ public:
     void RotateTorsoZ(float delta);
     void RotateHeadY(float delta);
     void RotateHeadZ(float delta);
+    void RotateLeftShoulder(float delta);
+    void RotateRightShoulder(float delta);
+    void RotateLeftElbow(float delta);
+    void RotateRightElbow(float delta);
+    void RotateWrist(float delta);
+    void RotateFingers(float delta, int fingerIndex);
+    void RotateThumb(float delta);
     void ResetRotations();
 
     head* GetHead() { return robotHead; }
@@ -44,4 +61,14 @@ public:
     float GetHeadRotationZ() const { return headRotZ; }
     float GetTorsoRotationY() const { return torsoRotY; }
     float GetTorsoRotationZ() const { return torsoRotZ; }
+    float GetShoulderAngle() const { return shoulderAngle; }
+    float GetElbowAngle() const { return elbowAngle; }
+    float GetWristAngle() const { return wristAngle; }
+    float GetFingerAngles() const { return fingerAngle; }
+    float GetThumbAngle() const { return thumbAngle; }
+
+    // Animation
+    void Update(float deltaTime);
+    void StartJump();
+    void StartSpecialAnimation();
 };

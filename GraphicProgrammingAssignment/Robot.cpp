@@ -84,7 +84,7 @@ void Robot::RotateTorsoZ(float delta)
 void Robot::RotateHeadY(float delta)
 {
     headRotY += delta;
-    // Limit to ±30 degrees
+    // Limit to ?0 degrees
     if (headRotY > 30.0f)
         headRotY = 30.0f;
     else if (headRotY < -30.0f)
@@ -94,7 +94,7 @@ void Robot::RotateHeadY(float delta)
 void Robot::RotateHeadZ(float delta)
 {
     headRotZ += delta;
-    // Limit to ±30 degrees
+    // Limit to ?0 degrees
     if (headRotZ > 30.0f)
         headRotZ = 30.0f;
     else if (headRotZ < -30.0f)
@@ -136,12 +136,18 @@ void Robot::RotateWrist(float delta)
     else if (wristAngle < -60.0f) wristAngle = -60.0f;
 }
 
-void Robot::RotateFingers(float delta)
+void Robot::RotateFingers(float delta, int fingerIndex)
 {
+	fingerAngles[fingerIndex] += delta;
+    if (fingerAngles[fingerIndex] > 0.0f) fingerAngles[fingerIndex] = 0.0f;
+    else if (fingerAngles[fingerIndex] < -100.0f) fingerAngles[fingerIndex] = -100.0f;
 }
 
 void Robot::RotateThumb(float delta)
 {
+    thumbAngle += delta;
+    if (thumbAngle > 0.0f) thumbAngle = 0.0f;
+	else if (thumbAngle < -100.0f) thumbAngle = -100.0f;
 }
 
 void Robot::ResetRotations()

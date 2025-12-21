@@ -46,7 +46,7 @@ public:
     void RotateLeftElbow(float delta);
     void RotateRightElbow(float delta);
     void RotateWrist(float delta);
-    void RotateFingers(float delta);
+    void RotateFingers(float delta, int fingerIndex);
     void RotateThumb(float delta);
     void ResetRotations();
 

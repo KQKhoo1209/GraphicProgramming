@@ -311,14 +311,55 @@ void InputManager::UpdateRobotMovement()
 	{
 		robot->RotateRightElbow(0.1f);
 	}
-	if (IsKeyPressed('B'))
+	if (IsKeyPressed('G'))
 	{
 		robot->RotateWrist(0.1f);
 	}
-	if (IsKeyPressed('N'))
+	if (IsKeyPressed('B'))
 	{
 		robot->RotateWrist(-0.1f);
 	}
+	if(IsKeyPressed('H'))
+	{
+		robot->RotateFingers(-0.1f, 0);
+	}
+	if (IsKeyPressed('N'))
+	{
+		robot->RotateFingers(0.1f, 0);
+	}
+	if (IsKeyPressed('J'))
+	{
+		robot->RotateFingers(-0.1f, 1);
+	}
+	if (IsKeyPressed('M'))
+	{
+		robot->RotateFingers(0.1f, 1);
+	}
+	if (IsKeyPressed('K'))
+	{
+		robot->RotateFingers(-0.1f, 2);
+	}
+	if (IsKeyPressed('L'))
+	{
+		robot->RotateFingers(0.1f, 2);
+	}
+	if (IsKeyPressed('U'))
+	{
+		robot->RotateFingers(-0.1f, 3);
+	}
+	if (IsKeyPressed('I'))
+	{
+		robot->RotateFingers(0.1f, 3);
+	}
+	if (IsKeyPressed('O'))
+	{
+		robot->RotateThumb(-0.1f);
+	}
+	if (IsKeyPressed('P'))
+	{
+		robot->RotateThumb(0.1f);
+	}
+
 }
 
 // Animation

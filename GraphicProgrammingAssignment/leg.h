@@ -5,9 +5,6 @@
 extern float hipRotation;
 extern float kneeRotation;
 
-extern bool isWalking;
-extern float walkPhase;
-
 // Draw both legs
 void drawRobotLegs();
 

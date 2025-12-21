@@ -1,20 +1,22 @@
 #pragma once
-#ifndef TIMER_H
-#define TIMER_H
 
 #include <Windows.h>
+#include <chrono>
 
 class Timer
 {
 public:
     Timer();
 
-    void Update();
+    void Reset();
+    void Tick();
     float GetDeltaTime() const;
+    float GetTotalTime() const;
 
 private:
-    DWORD lastTime;
-    float deltaTime;
-};
+    std::chrono::high_resolution_clock::time_point startTime;
+    std::chrono::high_resolution_clock::time_point previousTime;
 
-#endif
+    float deltaTime;
+    float totalTime;
+};

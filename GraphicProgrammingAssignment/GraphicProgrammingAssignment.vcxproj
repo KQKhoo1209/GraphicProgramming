@@ -123,6 +123,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationManager.cpp" />
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="arm.cpp" />
     <ClCompile Include="head.cpp" />
     <ClCompile Include="helperFunction.cpp" />
@@ -131,10 +133,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Robot.cpp" />
     <ClCompile Include="texture.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="torso.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationManager.h" />
+    <ClInclude Include="Animator.h" />
     <ClInclude Include="arm.h" />
     <ClInclude Include="head.h" />
     <ClInclude Include="helperFunction.h" />
@@ -142,6 +147,7 @@
     <ClInclude Include="leg.h" />
     <ClInclude Include="Robot.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="torso.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>

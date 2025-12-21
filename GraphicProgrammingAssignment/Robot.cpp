@@ -1,6 +1,6 @@
 #include <Windows.h>
 #include "Robot.h"
-#include <math.h>
+#include "Animator.h"
 
 extern GLfloat whiteColor[];
 
@@ -40,6 +40,21 @@ void Robot::SetPosition(float x, float y, float z)
     robotPosX = x;
     robotPosY = y;
     robotPosZ = z;
+}
+
+void Robot::MoveRobotX(float delta)
+{
+    robotPosX += delta;
+}
+
+void Robot::MoveRobotY(float delta)
+{
+    robotPosY += delta;
+}
+
+void Robot::MoveRobotZ(float delta)
+{
+    robotPosZ += delta;
 }
 
 void Robot::RotateRobot(float delta)
@@ -103,7 +118,7 @@ void Robot::DrawRobot()
 
         glPushMatrix();
         glTranslatef(0.0f, -0.75f, 0.0f);
-        glScalef(0.8f, 0.9f, 0.8f);
+        glScalef(0.8f, 1.1f, 0.8f);
         drawRobotLegs();
         glPopMatrix();
 

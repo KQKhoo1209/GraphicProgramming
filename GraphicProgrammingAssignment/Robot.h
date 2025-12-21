@@ -14,7 +14,7 @@ private:
     head* robotHead;
     Weapon* weapon;
 
-    float robotPosX, robotPosY, robotPosZ;
+    float robotPosX, robotPosZ;
     float robotRotY;
     float torsoRotY, torsoRotZ;
     float headRotY, headRotZ;
@@ -25,10 +25,7 @@ public:
 
     void InitializeRobotQuadratics();
     void DrawRobot();
-    void SetPosition(float x, float y, float z);
-    void MoveRobotX(float delta);
-    void MoveRobotY(float delta);
-    void MoveRobotZ(float delta);
+    void MoveRobot(float delta);
     void RotateRobot(float delta);
     void RotateTorsoY(float delta);
     void RotateTorsoZ(float delta);
@@ -41,7 +38,6 @@ public:
     Weapon* GetWeapon() { return weapon; }
 
     float GetRobotPosX() const { return robotPosX; }
-    float GetRobotPosY() const { return robotPosY; }
     float GetRobotPosZ() const { return robotPosZ; }
     float GetRobotRotationY() const { return robotRotY; }
     float GetHeadRotationY() const { return headRotY; }

@@ -123,7 +123,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="arm.cpp" />
     <ClCompile Include="head.cpp" />
@@ -138,7 +137,6 @@
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimationManager.h" />
     <ClInclude Include="Animator.h" />
     <ClInclude Include="arm.h" />
     <ClInclude Include="head.h" />

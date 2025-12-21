@@ -26,6 +26,7 @@ public:
 
     // Walk Animation
     void RobotWalk();
+    float GetShoulderAngle(float side) const;
 
     // Jump Animation
     void RobotJump();

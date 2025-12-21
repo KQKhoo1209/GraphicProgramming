@@ -53,6 +53,30 @@ void Animator::RobotWalk()
 	state = WALK_ANIM;
 }
 
+// Add this to Animator.cpp
+
+float Animator::GetShoulderAngle(float side) const
+{
+    // 1. Priority: Knife Animation (Existing logic)
+    if (state == KNIFE_SEP_ANIM)
+    {
+        return GetSpecialShoulderAngle();
+    }
+
+    // 2. Walking Animation (New logic)
+    if (state == WALK_ANIM)
+    {
+        // Arms swing opposite to legs.
+        // Left Arm (side -1) needs offset PI (3.14) to be opposite to Left Leg (0.0)
+        // Right Arm (side 1) needs offset 0.0 to be opposite to Right Leg (3.14)
+        float offset = (side < 0.0f) ? 3.14159f : 0.0f;
+
+        // Swing amplitude of 25 degrees
+        return sin(phase + offset) * 25.0f;
+    }
+    return 0.0f;
+}
+
 void Animator::RobotJump()
 {
     if (state == IDLE_ANIM || state == WALK_ANIM)
@@ -187,6 +211,7 @@ void Animator::Stop()
 
 float Animator::GetHipAngle(float side) const
 {
+    // Jumping Logic
     if (state == JUMP_ANIM)
     {
         if (jumpPhase < 0.5f) {
@@ -200,7 +225,16 @@ float Animator::GetHipAngle(float side) const
         }
     }
 
+    // Knife Spawning Leg Move
+    if (state == KNIFE_SEP_ANIM)
+    {
+        bool isLeft = (side < 0.0f);
+        return GetSpecialLegAngle(isLeft);
+    }
+
+    // Walking Logic
     if (state != WALK_ANIM) return 0.0f;
+
     float offset = (side < 0.0f) ? 0.0f : 3.14159f;
     return sin(phase + offset) * 25.0f;
 }
@@ -220,7 +254,7 @@ float Animator::GetKneeAngle(float side) const
         }
     }
 
-    if (state != WALK_ANIM) return 0.0f; // If is not walking, knee rotation set to 0.0f
+    if (state != WALK_ANIM) return 0.0f;
     float offset = (side < 0.0f) ? 0.0f : 3.14159f;
     return fabs(sin(phase + offset)) * 35.0f;
 }

@@ -19,8 +19,9 @@ private:
     float robotRotY;
     float torsoRotY, torsoRotZ;
     float headRotY, headRotZ;
-    float shoulderAngle;
-    float elbowAngle;
+    float leftSwing, rightSwing;
+    float leftRaise, rightRaise;
+    float leftElbow, rightElbow;
     float wristAngle;
     float fingerAngles[4];
     float thumbAngle;
@@ -40,8 +41,10 @@ public:
     void RotateTorsoZ(float delta);
     void RotateHeadY(float delta);
     void RotateHeadZ(float delta);
-    void RotateShoulder(float delta);
-    void RotateElbow(float delta);
+    void RotateLeftShoulder(float delta);
+    void RotateRightShoulder(float delta);
+    void RotateLeftElbow(float delta);
+    void RotateRightElbow(float delta);
     void RotateWrist(float delta);
     void RotateFingers(float delta);
     void RotateThumb(float delta);

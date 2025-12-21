@@ -14,7 +14,10 @@ Robot::Robot()
     , headRotY(0.0f), headRotZ(0.0f)
     , knifeCount(5)
     , legAngle(60)
-    , shoulderAngle(-90.0f), elbowAngle(0.0f), wristAngle(0.0f)
+    , leftSwing(0.0f), rightSwing(0.0f)
+    , leftRaise(-90.0f), rightRaise(-90.0f)
+    , leftElbow(0.0f), rightElbow(0.0f)
+    , wristAngle(0.0f)
     , thumbAngle(0.0f)
 {
     fingerAngles[0] = 0.0f;
@@ -98,18 +101,32 @@ void Robot::RotateHeadZ(float delta)
         headRotZ = -30.0f;
 }
 
-void Robot::RotateShoulder(float delta)
+void Robot::RotateLeftShoulder(float delta)
 {
-    shoulderAngle += delta;
-    if (shoulderAngle > 90.0f) shoulderAngle = 90.0f;
-    else if (shoulderAngle < -90.0f) shoulderAngle = -90.0f;
+    leftSwing += delta;
+    if (leftSwing > 45.0f) leftSwing = 45.0f;
+    else if (leftSwing < -90.0f) leftSwing = -90.0f;
 }
 
-void Robot::RotateElbow(float delta)
+void Robot::RotateRightShoulder(float delta)
 {
-    elbowAngle += delta;
-    if (elbowAngle > 145.0f) elbowAngle = 145.0f;
-    else if (elbowAngle < 0.0f) elbowAngle = 0.0f;
+    rightSwing += delta;
+    if (rightSwing > 45.0f) rightSwing = 45.0f;
+    else if (rightSwing < -90.0f) rightSwing = -90.0f;
+}
+
+void Robot::RotateLeftElbow(float delta)
+{
+    leftElbow += delta;
+    if (leftElbow < -145.0f) leftElbow = -145.0f;
+    else if (leftElbow > 0.0f) leftElbow = 0.0f;
+}
+
+void Robot::RotateRightElbow(float delta)
+{
+    rightElbow += delta;
+    if (rightElbow < -145.0f) rightElbow = -145.0f;
+    else if (rightElbow > 0.0f) rightElbow = 0.0f;
 }
 
 void Robot::RotateWrist(float delta)
@@ -136,8 +153,12 @@ void Robot::ResetRotations()
     torsoRotZ = 0.0f;
     headRotY = 0.0f;
     headRotZ = 0.0f;
-    shoulderAngle = -90.0f;
-    elbowAngle = 0.0f;
+    leftSwing = 0.0f;
+    rightSwing = 0.0f;
+    leftRaise = -90.0f; 
+    rightRaise = -90.0f;
+    leftElbow = 0.0f;
+    rightElbow = 0.0f;
     wristAngle = 0.0f;
     fingerAngles[0, 1, 2, 3] = 0.0f;
     thumbAngle = 0.0f;
@@ -199,7 +220,7 @@ void Robot::DrawRobot()
                 glTranslatef(0.0f, 0.2f, 0.5f);
                 glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
 
-                float spacing = 0.3f; // Distance between knives
+                float spacing = 0.5f;
                 float startSide = -((knifeCount - 1) * spacing) / 2.0f;
 
                 for (int i = 0; i < knifeCount; i++)
@@ -219,32 +240,45 @@ void Robot::DrawRobot()
                 glPopMatrix();
             }
 
-            // === DRAW ARMS ===
-            float shoulder = 0.0f;
-            float elbow = 0.0f;
-
-            if (animator.GetState() == KNIFE_SEP_ANIM)
+            if (animator.GetState() != IDLE_ANIM)
             {
-                shoulder = animator.GetSpecialShoulderAngle();
-                elbow = animator.GetSpecialElbowAngle();
+                // Walking/Animation controls the SWING (Forward/Back)
+                leftSwing = animator.GetShoulderAngle(-1.0f);
+                rightSwing = animator.GetShoulderAngle(1.0f);
+
+                // Arms stay down during walk
+                leftRaise = -90.0f;
+                rightRaise = -90.0f;
+
+                // Handle Knife Trick Exceptions
+                if (animator.GetState() == KNIFE_SEP_ANIM)
+                {
+                    leftSwing = 0.0f; // No swinging
+                    leftRaise = animator.GetSpecialShoulderAngle(); // Use lift for knife trick
+
+                    leftElbow = animator.GetSpecialElbowAngle();
+                    rightElbow = leftElbow;
+                    wristAngle = 0.0f;
+                }
             }
+            // B. MANUAL MODE
             else
             {
-                shoulder = shoulderAngle;
-                elbow = elbowAngle;
+                leftRaise = -90.0f;
+                rightRaise = -90.0f;
             }
 
-            // Left Arm
+            // === DRAW LEFT ARM ===
             glPushMatrix();
             glTranslatef(-1.15f, 0.75f, 0.0f);
             glScalef(-1.0f, 1.0f, 1.0f);
-            DrawArm(shoulder, elbow, 0.0f, fingerAngles, thumbAngle);
+            DrawArm(leftSwing, leftRaise, leftElbow, wristAngle, fingerAngles, thumbAngle);
             glPopMatrix();
 
-            // Right Arm
+            // === DRAW RIGHT ARM ===
             glPushMatrix();
             glTranslatef(1.15f, 0.75f, 0.0f);
-            DrawArm(shoulder, elbow, 0.0f, fingerAngles, thumbAngle);
+            DrawArm(rightSwing, rightRaise, rightElbow, wristAngle, fingerAngles, thumbAngle);
             glPopMatrix();
         glPopMatrix();
     glPopMatrix();

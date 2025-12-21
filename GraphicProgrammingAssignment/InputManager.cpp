@@ -279,21 +279,37 @@ void InputManager::UpdateRobotMovement()
 	}
 
 	// Arm Rotation
+	if (IsKeyPressed('A'))
+	{
+		robot->RotateLeftShoulder(-0.1f);
+	}
 	if (IsKeyPressed('Z'))
 	{
-		robot->RotateShoulder(0.1f);
+		robot->RotateLeftShoulder(0.1f);
+	}
+	if (IsKeyPressed('S'))
+	{
+		robot->RotateRightShoulder(-0.1f);
 	}
 	if (IsKeyPressed('X'))
 	{
-		robot->RotateShoulder(-0.1f);
+		robot->RotateRightShoulder(0.1f);
+	}
+	if (IsKeyPressed('D'))
+	{
+		robot->RotateLeftElbow(-0.1f);
 	}
 	if (IsKeyPressed('C'))
 	{
-		robot->RotateElbow(0.1f);
+		robot->RotateLeftElbow(0.1f);
+	}
+	if (IsKeyPressed('F'))
+	{
+		robot->RotateRightElbow(-0.1f);
 	}
 	if (IsKeyPressed('V'))
 	{
-		robot->RotateElbow(-0.1f);
+		robot->RotateRightElbow(0.1f);
 	}
 	if (IsKeyPressed('B'))
 	{

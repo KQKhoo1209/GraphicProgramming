@@ -5,6 +5,7 @@
 #include "Animator.h"
 #include "leg.h"
 #include "arm.h"
+#include "Weapon.h"
 
 // External game state variables (these should be moved to a GameState class later)
 extern int camSwitch;
@@ -114,6 +115,20 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 	case VK_SPACE:
 		if (currentMode == ROBOTMOVEMENT_MODE) robot->ResetRotations();
 		if (currentMode == ANIMATION_MODE) robot->StartJump();
+		break;
+	case '1':
+		if (robot && robot->GetWeapon())
+			robot->GetWeapon()->SetSkin(SKIN_STEEL);
+		break;
+
+	case '2':
+		if (robot && robot->GetWeapon())
+			robot->GetWeapon()->SetSkin(SKIN_CRIMSON);
+		break;
+
+	case '3':
+		if (robot && robot->GetWeapon())
+			robot->GetWeapon()->SetSkin(SKIN_SLAUGHTER);
 		break;
 	case VK_ESCAPE:
 		PostQuitMessage(0);

@@ -7,6 +7,7 @@ extern GLfloat whiteColor[];
 Robot::Robot()
     : robotTorso(nullptr)
     , robotHead(nullptr)
+    , weapon(nullptr)
     , robotPosX(0.0f), robotPosY(0.0f), robotPosZ(0.0f)
     , robotRotY(0.0f)
     , torsoRotY(0.0f), torsoRotZ(0.0f)
@@ -18,6 +19,7 @@ Robot::~Robot()
 {
     if (robotTorso) delete robotTorso;
     if (robotHead) delete robotHead;
+    if (weapon) delete weapon;
 }
 
 void Robot::InitializeRobotQuadratics()
@@ -28,6 +30,9 @@ void Robot::InitializeRobotQuadratics()
 
     robotHead = new head();
     robotHead->InitializeHeadQuadratics();
+
+    weapon = new Weapon();
+    weapon->InitializeWeaponQuadratics();
 }
 
 void Robot::SetPosition(float x, float y, float z)
@@ -58,7 +63,7 @@ void Robot::RotateTorsoZ(float delta)
     torsoRotZ += delta;
     // Limit if needed
     if (torsoRotZ > 30.0f) torsoRotZ = 30.0f;
-    else if (torsoRotZ < -30.0f) torsoRotZ = -30.0f;
+    else if (torsoRotZ < 0.0f) torsoRotZ = 0.0f;
 }
 
 void Robot::RotateHeadY(float delta)
@@ -98,13 +103,13 @@ void Robot::DrawRobot()
 
         glPushMatrix();
         glTranslatef(0.0f, -0.75f, 0.0f);
-        glScalef(0.8f, 1.0f, 0.8f);
+        glScalef(0.8f, 0.9f, 0.8f);
         drawRobotLegs();
         glPopMatrix();
 
         glPushMatrix();
         glRotatef(torsoRotY, 0.0f, 1.0f, 0.0f);
-        glRotatef(torsoRotZ, 0.0f, 0.0f, 1.0f);
+        glRotatef(torsoRotZ, 1.0f, 0.0f, 0.0f);
         robotTorso->DrawTorso();
 
             glPushMatrix();
@@ -131,5 +136,12 @@ void Robot::DrawRobot()
             DrawArm();
             glPopMatrix();
         glPopMatrix();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0.0f, 1.0f);
+    //glRotatef(headRotY, 0.0f, 1.0f, 0.0f);
+    //glRotatef(headRotZ, 0.0f, 0.0f, 1.0f);
+    weapon->DrawWeapon();
     glPopMatrix();
 }

@@ -316,17 +316,24 @@ void Robot::DrawRobot()
 
             if (animator.GetState() == SWING_KNIFE_ANIM)
             {
+                for (int i = 0; i < 4; i++) {
+                    leftFingerAngles[i] = animator.GetSwingFingerAngle(-1.0f);
+                    rightFingerAngles[i] = animator.GetSwingFingerAngle(1.0f);
+                }
+
                 // === DRAW LEFT ARM ===
                 glPushMatrix();
                 glTranslatef(-1.15f, 0.75f, 0.0f);
                 glScalef(-1.0f, 1.0f, 1.0f);
                 DrawArm(
-                    animator.GetSwingShoulderAngle(-1.0f),
+                    animator.GetSwingShoulderAngle(1.0f),
                     -90.0f,
-                    animator.GetSwingElbowAngle(-1.0f),
-                    animator.GetSwingWristAngle(-1.0f),
+                    animator.GetSwingElbowAngle(1.0f),
+                    animator.GetSwingWristAngle(1.0f),
                     leftFingerAngles,
-                    animator.GetSwingThumbAngle(-1.0f)
+                    animator.GetSwingThumbAngle(1.0f),
+                    weapon,
+                    true
                 );
                 glPopMatrix();
 
@@ -339,12 +346,19 @@ void Robot::DrawRobot()
                     animator.GetSwingElbowAngle(1.0f),
                     animator.GetSwingWristAngle(1.0f),
                     rightFingerAngles,
-                    animator.GetSwingThumbAngle(1.0f)
+                    animator.GetSwingThumbAngle(1.0f),
+                    weapon,
+					true
                 );
                 glPopMatrix();
             }
             else
             {
+                for (int i = 0; i < 4; i++) {
+                    leftFingerAngles[i] = 0.0f;
+                    rightFingerAngles[i] = 0.0f;
+                }
+
                 // === DRAW LEFT ARM ===
                 glPushMatrix();
                 glTranslatef(-1.15f, 0.75f, 0.0f);

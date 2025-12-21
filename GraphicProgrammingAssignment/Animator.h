@@ -49,7 +49,7 @@ public:
     float GetSpecialLegAngle(bool isLeft) const;
     float GetSpecialShoulderAngle() const;
     float GetSpecialElbowAngle() const;
-    float GetSwingShoulderAngle(float side) const;  // ◊Û”“ ÷”√ side (-1 ◊Û, 1 ”“)
+    float GetSwingShoulderAngle(float side) const;
     float GetSwingElbowAngle(float side) const;
     float GetSwingWristAngle(float side) const;
     float GetSwingFingerAngle(float side) const;

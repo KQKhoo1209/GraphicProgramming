@@ -40,9 +40,19 @@ void Animator::AnimUpdate(float deltaTime)
     {
         knifePhase += deltaTime * 1.0f;
 
-        if (knifePhase > 5.0f)
+        if (knifePhase > 3.0f)
         {   
             knifePhase = 0.0f;
+            state = IDLE_ANIM;
+        }
+    }
+
+    if (state == SWING_KNIFE_ANIM)
+    {
+        swingPhase += deltaTime * 0.5f;
+        if (swingPhase > 1.5f)
+        {
+            swingPhase = 0.0f;
             state = IDLE_ANIM;
         }
     }
@@ -191,11 +201,6 @@ float Animator::GetKnifeScale(int index) const
     return scale;
 }
 
-void Animator::Stop()
-{
-	state = IDLE_ANIM;
-}
-
 float Animator::GetHipAngle(float side) const
 {
     // Jumping Logic
@@ -244,4 +249,80 @@ float Animator::GetKneeAngle(float side) const
     if (state != WALK_ANIM) return 0.0f;
     float offset = (side < 0.0f) ? 0.0f : 3.14159f;
     return fabs(sin(phase + offset)) * 35.0f;
+}
+
+void Animator::SwingKnives()
+{
+    if (state == IDLE_ANIM || state == WALK_ANIM)
+    {
+        state = SWING_KNIFE_ANIM;
+        swingPhase = 0.0f;
+    }
+}
+
+float Animator::GetSwingShoulderAngle(float side) const
+{
+	float t, startAngle, targetAngle;
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    if (swingPhase < 0.4f) {
+        return side * -30.0f;
+    }
+    else if (swingPhase < 1.0f) { 
+        t = (swingPhase - 0.4f) / 0.6f;
+        startAngle = side * -30.0f;
+        targetAngle = 0.0f;
+        return startAngle + t * (targetAngle - startAngle);
+    }
+    else {
+        t = (swingPhase - 1.0f) / 0.5f;
+        startAngle = 0.0f;
+        targetAngle = side * -90.0f;
+        return startAngle + t * (targetAngle - startAngle);
+    }
+}
+
+float Animator::GetSwingElbowAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    if (swingPhase < 0.4f) {
+        return side * -90.0f;
+    }
+    else if (swingPhase < 1.0f) {
+        float t = (swingPhase - 0.4f) / 0.6f;
+        float startAngle = side * -90.0f;
+        float targetAngle = 0.0f; 
+        return startAngle + t * (targetAngle - startAngle);
+    }
+    else {
+        float t = (swingPhase - 1.0f) / 0.5f;
+        float startAngle = 0.0f;
+        float targetAngle = side * -90.0f;
+        return startAngle + t * (targetAngle - startAngle);
+    }
+}
+
+float Animator::GetSwingWristAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+
+    return 0.0f; 
+}
+
+float Animator::GetSwingFingerAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+    return -80.0f;
+}
+
+float Animator::GetSwingThumbAngle(float side) const
+{
+    if (state != SWING_KNIFE_ANIM) return 0.0f;
+    return -40.0f;
+}
+
+void Animator::Stop()
+{
+    state = IDLE_ANIM;
 }

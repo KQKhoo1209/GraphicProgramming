@@ -189,7 +189,7 @@ void DrawHandCover()
     glPopMatrix();
 }
 
-void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist, const float* fingerAngles, float thumbAngle)
+void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist, const float* fingerAngles, float thumbAngle, Weapon* weapon, bool drawWeapon)
 {
     GLUquadric* joint = gluNewQuadric();
     glPushMatrix();
@@ -210,7 +210,6 @@ void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist,
     glPopMatrix();
 
     glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
-    // Shoulder joint
     glPushMatrix();
     glScalef(0.1f, 0.1f, 0.1f);
     gluSphere(joint, 0.4, 16, 16);
@@ -220,7 +219,7 @@ void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist,
     DrawArmSegment(0.55f, 0.12f, 0.10f);
     glTranslatef(0.55f, 0, 0);
 
-    // ===== Elbow =====
+    // Elbow
     glPushMatrix();
     glScalef(0.1f, 0.1f, 0.1f);
     gluSphere(joint, 0.4, 16, 16);
@@ -232,6 +231,7 @@ void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist,
     DrawArmSegment(0.45f, 0.11f, 0.09f);
     glTranslatef(0.45f, 0, 0);
 
+    // Wrist & Hand
     glPushMatrix();
     glRotatef(wrist, 0.0f, 0.0f, 1.0f);
     glTranslatef(0.175f, 0.075f, 0.0f);
@@ -239,7 +239,6 @@ void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist,
     glPopMatrix();
 
     glBindTexture(GL_TEXTURE_2D, steelTexture);
-    // ===== Wrist =====
     glPushMatrix();
     glScalef(0.05f, 0.05f, 0.05f);
     gluSphere(joint, 0.3, 16, 16);
@@ -247,10 +246,20 @@ void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist,
 
     glRotatef(wrist, 0.0f, 0.0f, 1.0f);
 
-    // Hand
     DrawHand(fingerAngles, thumbAngle);
+
+	// Weapon
+    if (drawWeapon && weapon)
+    {
+        glPushMatrix();
+        glTranslatef(0.25f, -0.05f, 0.25f); 
+        glRotatef(-90.0f, 0, 1, 0);
+        weapon->DrawWeapon();
+        glPopMatrix();
+    }
 
     gluDeleteQuadric(joint);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }
+

@@ -9,6 +9,8 @@ GLuint carbonTexture = 0;
 GLuint darkBlueTexture = 0;
 GLuint whiteMetalTexture = 0;
 GLuint knifeTipTexture = 0;
+GLuint crimsonWebTexture = 0;
+GLuint slaughterTexture = 0;
 
 static BITMAP BMP;
 static HBITMAP hBMP = NULL;
@@ -115,6 +117,36 @@ void LoadTexture()
 
 	glGenTextures(1, &whiteMetalTexture);
 	glBindTexture(GL_TEXTURE_2D, whiteMetalTexture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	// crimsonWeb Texture
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"Asset/crimsonWeb.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BITMAP), &BMP);
+
+	glGenTextures(1, &crimsonWebTexture);
+	glBindTexture(GL_TEXTURE_2D, crimsonWebTexture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	// slaughterWeb Texture
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"Asset/slaughter.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BITMAP), &BMP);
+
+	glGenTextures(1, &slaughterTexture);
+	glBindTexture(GL_TEXTURE_2D, slaughterTexture);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

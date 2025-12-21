@@ -1,4 +1,5 @@
 #include "Weapon.h"
+#include "texture.h"
 
 extern GLfloat whiteColor[];
 
@@ -8,6 +9,7 @@ Weapon::Weapon()
     weaponCircleAngle = 0.0f;
     weaponCircleX = 0.0f;
     weaponCircleY = 0.0f;
+    currentSkin = SKIN_STEEL;
 }
 
 Weapon::~Weapon()
@@ -28,7 +30,7 @@ void Weapon::InitializeWeaponQuadratics()
 
 void Weapon::WeaponTip()
 {
-    glBindTexture(GL_TEXTURE_2D, steelTexture);
+    BindWeaponTexture();
     glPushMatrix();
     glTranslatef(0.0f, 0.0f, 0.0f);
     DrawCustomBox(
@@ -100,3 +102,28 @@ void Weapon::DrawWeapon()
     glPopMatrix();
     glDisable(GL_TEXTURE_2D);
 }
+
+void Weapon::BindWeaponTexture()
+{
+    switch (currentSkin)
+    {
+    case SKIN_STEEL:
+        glBindTexture(GL_TEXTURE_2D, steelTexture);
+        break;
+
+    case SKIN_CRIMSON:
+        glBindTexture(GL_TEXTURE_2D, crimsonWebTexture);
+        break;
+
+    case SKIN_SLAUGHTER:
+        glBindTexture(GL_TEXTURE_2D, slaughterTexture);
+        break;
+    }
+}
+
+void Weapon::SetSkin(WeaponSkin skin)
+{
+    currentSkin = skin;
+}
+
+

@@ -5,6 +5,7 @@
 #include "Animator.h"
 #include "leg.h"
 #include "arm.h"
+#include "Weapon.h"
 
 // External game state variables (these should be moved to a GameState class later)
 extern int camSwitch;
@@ -108,9 +109,26 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 	case 'F':
 		if (currentMode == ANIMATION_MODE) robot->StartSpecialAnimation();
 		break;
+	case 'Q':
+		if (currentMode == ANIMATION_MODE) robot->StartSwingKnife();
+		break;
 	case VK_SPACE:
 		if (currentMode == ROBOTMOVEMENT_MODE) robot->ResetRotations();
 		if (currentMode == ANIMATION_MODE) robot->StartJump();
+		break;
+	case '1':
+		if (robot && robot->GetWeapon())
+			robot->GetWeapon()->SetSkin(SKIN_STEEL);
+		break;
+
+	case '2':
+		if (robot && robot->GetWeapon())
+			robot->GetWeapon()->SetSkin(SKIN_CRIMSON);
+		break;
+
+	case '3':
+		if (robot && robot->GetWeapon())
+			robot->GetWeapon()->SetSkin(SKIN_SLAUGHTER);
 		break;
 	case VK_ESCAPE:
 		PostQuitMessage(0);
@@ -313,51 +331,99 @@ void InputManager::UpdateRobotMovement()
 	}
 	if (IsKeyPressed('G'))
 	{
-		robot->RotateWrist(0.1f);
+		robot->RotateLeftWrist(0.1f);
 	}
 	if (IsKeyPressed('B'))
 	{
-		robot->RotateWrist(-0.1f);
+		robot->RotateLeftWrist(-0.1f);
 	}
 	if(IsKeyPressed('H'))
 	{
-		robot->RotateFingers(-0.1f, 0);
+		robot->RotateLeftFingers(-0.1f, 0);
 	}
 	if (IsKeyPressed('N'))
 	{
-		robot->RotateFingers(0.1f, 0);
+		robot->RotateLeftFingers(0.1f, 0);
 	}
 	if (IsKeyPressed('J'))
 	{
-		robot->RotateFingers(-0.1f, 1);
+		robot->RotateLeftFingers(-0.1f, 1);
 	}
 	if (IsKeyPressed('M'))
 	{
-		robot->RotateFingers(0.1f, 1);
+		robot->RotateLeftFingers(0.1f, 1);
 	}
 	if (IsKeyPressed('K'))
 	{
-		robot->RotateFingers(-0.1f, 2);
+		robot->RotateLeftFingers(-0.1f, 2);
 	}
 	if (IsKeyPressed('L'))
 	{
-		robot->RotateFingers(0.1f, 2);
+		robot->RotateLeftFingers(0.1f, 2);
 	}
 	if (IsKeyPressed('U'))
 	{
-		robot->RotateFingers(-0.1f, 3);
+		robot->RotateLeftFingers(-0.1f, 3);
 	}
 	if (IsKeyPressed('I'))
 	{
-		robot->RotateFingers(0.1f, 3);
+		robot->RotateLeftFingers(0.1f, 3);
 	}
 	if (IsKeyPressed('O'))
 	{
-		robot->RotateThumb(-0.1f);
+		robot->RotateLeftThumb(-0.1f);
 	}
 	if (IsKeyPressed('P'))
 	{
-		robot->RotateThumb(0.1f);
+		robot->RotateLeftThumb(0.1f);
+	}
+	if (IsKeyPressed('Q')) 
+	{
+		robot->RotateRightWrist(0.1f);
+	}
+	if (IsKeyPressed('W'))
+	{
+		robot->RotateRightWrist(-0.1f);
+	}
+	if (IsKeyPressed('E'))
+	{
+		robot->RotateRightFingers(-0.1f, 0);
+	}
+	if (IsKeyPressed('R'))
+	{
+		robot->RotateRightFingers(0.1f, 0);
+	}
+	if (IsKeyPressed('T'))
+	{
+		robot->RotateRightFingers(-0.1f, 1);
+	}
+	if (IsKeyPressed('Y'))
+	{
+		robot->RotateRightFingers(0.1f, 1);
+	}
+	if (IsKeyPressed('9'))
+	{
+		robot->RotateRightFingers(-0.1f, 2);
+	}
+	if (IsKeyPressed('0'))
+	{
+		robot->RotateRightFingers(0.1f, 2);
+	}
+	if (IsKeyPressed(VK_OEM_MINUS))
+	{
+		robot->RotateRightFingers(-0.1f, 3);
+	}
+	if (IsKeyPressed(VK_OEM_PLUS))
+	{
+		robot->RotateRightFingers(0.1f, 3);
+	}
+	if (IsKeyPressed(VK_OEM_MINUS)) // [
+	{
+		robot->RotateRightThumb(-0.1f);
+	}
+	if (IsKeyPressed(VK_OEM_6)) // ]
+	{
+		robot->RotateRightThumb(0.1f);
 	}
 
 }

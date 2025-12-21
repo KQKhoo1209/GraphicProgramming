@@ -12,6 +12,7 @@ extern GLuint redSteelTexture;
 extern GLuint carbonTexture;
 extern GLuint darkBlueTexture;
 extern GLuint whiteMetalTexture;
+extern GLuint knifeTipTexture;
 
 void LoadTexture();
 void ReleaseTexture();

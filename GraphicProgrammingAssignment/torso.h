@@ -9,6 +9,10 @@ private:
 	float ringDotAngle;
 	float ringX;
 	float ringY;
+	
+	float lightOffset;
+	float lightSpeed;
+	float lightZPosition;
 public:
 	torso();   // constructor
 	~torso();  // destructor
@@ -21,5 +25,10 @@ public:
 	void TorsoBack();
 	void middleCylinder();
 	void DrawTorso();
+
+	// Breathe light effect
+	void UpdateLightPosition();
+	void SetupMovingLight();
+	void DrawMovingLightSource();
 };
 

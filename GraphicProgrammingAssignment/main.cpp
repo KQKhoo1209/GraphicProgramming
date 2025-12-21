@@ -3,11 +3,13 @@
 #include <gl/GLU.h>
 #include <math.h>
 #include "InputManager.h"
+#include "AnimationManager.h"
 #include "Robot.h"
 #include "torso.h"
 #include "leg.h"
 #include "arm.h"
 #include "texture.h"
+#include "Timer.h"
 
 #pragma comment (lib, "OpenGL32.lib") // A shortcut. Only works with windows platform
 #pragma comment (lib, "GLU32.lib")
@@ -25,6 +27,7 @@ float speed = 0.01f;
 float angle = 0.0f;
 float scaling = 1.0f;
 
+Timer timer;
 InputManager* inputManager = nullptr;
 Robot* robot = nullptr;
 
@@ -194,75 +197,78 @@ void Display() // Render
 						0, 0, diffuseLightPosition[1], 0,
 						0, 0, 0, diffuseLightPosition[1] };
 
-	switch (questionToDisplay)
-	{
-	case 0:
-	{
-		// Light indicator (reuse existing light code)
-		glPushMatrix();
-		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
-		gluSphere(var, 0.05f, 10, 10);
-		glPopMatrix();
+	// Light indicator (reuse existing light code)
+	glPushMatrix();
+	glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1] + 1.0f, diffuseLightPosition[2]);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+	gluSphere(var, 0.05f, 10, 10);
+	glPopMatrix();
 
-		// ===== YOUR ROBOT LEGS =====
-		glPushMatrix();
-		glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
-		drawRobotLegs();
-		glPopMatrix();
-
-		break;
-		
-		break;
-	}
-	case 1:
+	if (robot)
 	{
-		// Light indicator (reuse existing light code)
-		glPushMatrix();
-		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1] + 1.0f, diffuseLightPosition[2]);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
-		gluSphere(var, 0.05f, 10, 10);
-		glPopMatrix();
+		robot->DrawRobot();
+	}
 
-		if (robot)
-		{	
-			robot->DrawRobot();
-		}
-		break;
-	}
-	break;
-	case 2: 
-	{
+	//switch (questionToDisplay)
+	//{
+	//case 0:
+	//{
+	//	// Light indicator (reuse existing light code)
+	//	glPushMatrix();
+	//	glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
+	//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
+	//	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+	//	gluSphere(var, 0.05f, 10, 10);
+	//	glPopMatrix();
 
-		break;
-	}
-	case 3: // robot legs
-	{
-		
-	}
-	case 4:
-	{
+	//	// ===== YOUR ROBOT LEGS =====
+	//	glPushMatrix();
+	//	glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
+	//	drawRobotLegs();
+	//	glPopMatrix();
 
-		// Light indicator (reuse existing light code)
-		glPushMatrix();
-		glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
-		gluSphere(var, 0.05f, 10, 10);
-		glPopMatrix();
+	//	break;
+	//	
+	//	break;
+	//}
+	//case 1:
+	//{
+	//	
+	//	break;
+	//}
+	//break;
+	//case 2: 
+	//{
 
-		// ===== YOUR ROBOT LEGS =====
-		glPushMatrix();
-		glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
-		DrawArm();
-		glPopMatrix();
-		break;
-	}
-	default:
-		break;
-	}
+	//	break;
+	//}
+	//case 3: // robot legs
+	//{
+	//	
+	//}
+	//case 4:
+	//{
+
+	//	// Light indicator (reuse existing light code)
+	//	glPushMatrix();
+	//	glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
+	//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
+	//	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
+	//	gluSphere(var, 0.05f, 10, 10);
+	//	glPopMatrix();
+
+	//	// ===== YOUR ROBOT LEGS =====
+	//	glPushMatrix();
+	//	glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
+	//	DrawArm();
+	//	glPopMatrix();
+	//	break;
+	//}
+	//default:
+	//	break;
+	//}
+	
 	//--------------------------------
 	//	End of OpenGL drawing
 	//--------------------------------
@@ -318,8 +324,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		CW_USEDEFAULT, CW_USEDEFAULT, windowWidth, windowHeight,
 		NULL, NULL, wc.hInstance, NULL);
 
-	// Set pointer to diffuse light position array
-	//inputManager->SetLightPositionPointer(diffuseLightPosition[]);
+	timer.Reset();
 
 	//--------------------------------
 	//	Initialize window for OpenGL
@@ -366,14 +371,18 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			DispatchMessage(&msg);
 		}
 
+		timer.Tick();
+		float dt = timer.GetDeltaTime();
+
 		// Update input manager (handles continuous key input)
 		if (inputManager)
 		{
-			inputManager->Update();
+			inputManager->Update(dt);
+			animator.AnimUpdate(dt);
+			
 		}
 
 		Display();
-
 		SwapBuffers(hdc);
 	}
 

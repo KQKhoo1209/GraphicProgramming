@@ -129,7 +129,7 @@ void torso::DrawMovingLightSource()
     }
     else {
         offset -= 0.00005f;
-        if (offset < 0.0f) forward = true;
+        if (offset < -0.01f) forward = true;
     }
 
     // Position for the light

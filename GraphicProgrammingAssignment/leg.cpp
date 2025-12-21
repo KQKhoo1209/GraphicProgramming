@@ -2,6 +2,7 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include <cmath>
+#include "AnimationManager.h"
 #include "leg.h"
 #include "texture.h"
 
@@ -9,15 +10,6 @@
 float hipRotation = 0.0f;
 float kneeRotation = 0.0f;
 static GLUquadric* quad = nullptr;
-
-bool isWalking = false;
-float walkPhase = 0.0f;
-
-float hipAnim = 0.0f;
-float kneeAnim = 0.0f;
-
-static const float animSpeed = 0.01f;
-static const float maxPhase = 6.28f; 
 
 void drawCuboid(float w, float h, float d)
 {
@@ -251,13 +243,10 @@ void drawHipModule()
 // leg
 void drawSingleLeg(float xOffset)
 {
-    if (isWalking)
-    {
-        float dir = (xOffset < 0.0f) ? 1.0f : -1.0f;
+    float side = (xOffset < 0.0f) ? -1.0f : 1.0f;
 
-        hipAnim = sin(walkPhase) * 25.0f * dir;
-        kneeAnim = fabs(sin(walkPhase)) * 35.0f;
-    }
+    float animHipOffset = animator.GetHipAngle(side);
+    float animKneeOffset = animator.GetKneeAngle(side);
 
     glPushMatrix();
 
@@ -265,7 +254,7 @@ void drawSingleLeg(float xOffset)
     glTranslatef(xOffset, 0.0f, 0.0f);
 
     // hip joint
-    glRotatef(hipRotation + hipAnim, 1, 0, 0);
+    glRotatef(hipRotation + animHipOffset, 1, 0, 0);
 
     glBindTexture(GL_TEXTURE_2D, redSteelTexture);
 
@@ -298,7 +287,7 @@ void drawSingleLeg(float xOffset)
     glTranslatef(0.8f, -0.48f, 0.0f);
     glPopMatrix();
     glTranslatef(0.0f, -0.32f, 0.0f);
-    glRotatef(kneeRotation + kneeAnim, 1, 0, 0);
+    glRotatef(kneeRotation + animKneeOffset, 1, 0, 0);
 
     glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
 
@@ -345,17 +334,5 @@ void drawRobotLegs()
 
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-
-    // walk update
-    if (isWalking)
-    {
-        walkPhase += animSpeed;
-
-        if (walkPhase >= maxPhase)
-        {
-            walkPhase = maxPhase;
-            isWalking = false;
-        }
-    }
 }
 

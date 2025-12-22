@@ -183,7 +183,7 @@ void Display() // Render
 		gluPerspective(50.6272, aspectRatio, 0.01f, 100.0f);
 	}
 	else if(camSwitch == -1) {
-		glOrtho(-5, 5, -5, 5, -5, 5);
+		glOrtho(-10, 10, -5, 5, -5, 5);
 	}
 	//glFrustum(-0.1f, 0.1f, -0.1f, 0.1f, 0.2, 2);
 

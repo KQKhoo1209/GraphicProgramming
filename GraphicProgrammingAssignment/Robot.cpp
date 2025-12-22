@@ -366,13 +366,13 @@ void Robot::DrawRobot()
 					true
                 );
                 glPopMatrix();
-            }
-            else
-            {
                 for (int i = 0; i < 4; i++) {
                     leftFingerAngles[i] = 0.0f;
                     rightFingerAngles[i] = 0.0f;
                 }
+            }
+            else
+            {
 
                 // === DRAW LEFT ARM ===
                 glPushMatrix();

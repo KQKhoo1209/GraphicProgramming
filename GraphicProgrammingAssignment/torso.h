@@ -4,9 +4,9 @@
 
 enum TorsoSkin
 {
-	TORSO_STEEL = 0,
+	TORSO_BLUESTEEL = 0,
 	TORSO_CRIMSON,
-	TORSO_BLUESTEEL
+	TORSO_STEEL
 };
 
 class torso

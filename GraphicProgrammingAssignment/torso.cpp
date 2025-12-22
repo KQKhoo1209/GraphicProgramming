@@ -93,7 +93,7 @@ void DrawCenterTriangleRing(int sides, float radius)
 torso::torso()
 {
     robotTorso = gluNewQuadric();
-    currentSkin = TORSO_STEEL;
+    currentSkin = TORSO_BLUESTEEL;
     ringDotAngle = 0.0f;
     ringX = 0.0f;
     ringY = 0.0f;
@@ -429,10 +429,12 @@ GLuint torso::GetBaseTorsoTexture()
     {
     case TORSO_CRIMSON:
         return crimsonWebTexture;
+    case TORSO_STEEL:
+        return steelTexture;
     case TORSO_BLUESTEEL:
         return blueSteelTexture;
     default:
-        return steelTexture;
+        break;
     }
 }
 
@@ -1285,7 +1287,7 @@ void torso::DrawTorso()
         glBindTexture(GL_TEXTURE_2D, crimsonWebTexture);
         break;
 
-    case TORSO_BLUESTEEL:
+    case TORSO_STEEL:
         glBindTexture(GL_TEXTURE_2D, slaughterTexture);
         break;
 

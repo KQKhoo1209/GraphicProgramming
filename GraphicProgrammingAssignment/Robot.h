@@ -24,7 +24,7 @@ private:
     float leftRaise, rightRaise;
     float leftElbow, rightElbow;
     float leftWristAngle, rightWristAngle;
-    float leftFingerAngles[4], rightFingerAngles[4];
+    float leftFingerAngles[4] = { 0 }, rightFingerAngles[4] = { 0 };
     float leftThumbAngle, rightThumbAngle;
     bool hasHat;
 

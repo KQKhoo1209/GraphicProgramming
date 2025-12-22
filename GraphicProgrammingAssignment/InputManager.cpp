@@ -116,25 +116,25 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 		if (currentMode == ROBOTMOVEMENT_MODE) robot->ResetRotations();
 		if (currentMode == ANIMATION_MODE) robot->StartJump();
 		break;
-	case '1':
+	case VK_F1:
 		if (robot && robot->GetWeapon())
 			robot->GetWeapon()->SetSkin(SKIN_STEEL);	
 			robot->GetTorso()->SetSkin(TORSO_STEEL);	
 		break;
 
-	case '2':
+	case VK_F2:
 		if (robot && robot->GetWeapon())
 			robot->GetWeapon()->SetSkin(SKIN_CRIMSON);
 			robot->GetTorso()->SetSkin(TORSO_CRIMSON);
 		break;
 
-	case '3':
+	case VK_F3:
 		if (robot && robot->GetWeapon())
 			robot->GetWeapon()->SetSkin(SKIN_SLAUGHTER);
 			robot->GetTorso()->SetSkin(TORSO_BLUESTEEL);
 		break;
-	case '4':
-		if (currentMode == ANIMATION_MODE || currentMode == ROBOTMOVEMENT_MODE) robot->ShowHat();
+	case VK_F4:
+		robot->ShowHat();
 		break;
 	case VK_ESCAPE:
 		PostQuitMessage(0);

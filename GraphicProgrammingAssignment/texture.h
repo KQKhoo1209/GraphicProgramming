@@ -15,6 +15,8 @@ extern GLuint whiteMetalTexture;
 extern GLuint knifeTipTexture;
 extern GLuint crimsonWebTexture;
 extern GLuint slaughterTexture;
+extern GLuint hatRedTexture;
+extern GLuint hatWhiteTexture;
 
 void LoadTexture();
 void ReleaseTexture();

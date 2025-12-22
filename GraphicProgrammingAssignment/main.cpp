@@ -209,66 +209,6 @@ void Display() // Render
 	{
 		robot->DrawRobot();
 	}
-
-	//switch (questionToDisplay)
-	//{
-	//case 0:
-	//{
-	//	// Light indicator (reuse existing light code)
-	//	glPushMatrix();
-	//	glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
-	//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-	//	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
-	//	gluSphere(var, 0.05f, 10, 10);
-	//	glPopMatrix();
-
-	//	// ===== YOUR ROBOT LEGS =====
-	//	glPushMatrix();
-	//	glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
-	//	drawRobotLegs();
-	//	glPopMatrix();
-
-	//	break;
-	//	
-	//	break;
-	//}
-	//case 1:
-	//{
-	//	
-	//	break;
-	//}
-	//break;
-	//case 2: 
-	//{
-
-	//	break;
-	//}
-	//case 3: // robot legs
-	//{
-	//	
-	//}
-	//case 4:
-	//{
-
-	//	// Light indicator (reuse existing light code)
-	//	glPushMatrix();
-	//	glTranslatef(diffuseLightPosition[0], diffuseLightPosition[1], diffuseLightPosition[2]);
-	//	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, whiteColor);
-	//	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, whiteColor);
-	//	gluSphere(var, 0.05f, 10, 10);
-	//	glPopMatrix();
-
-	//	// ===== YOUR ROBOT LEGS =====
-	//	glPushMatrix();
-	//	glTranslatef(0.0f, 1.0f, 0.0f); // lift above ground
-	//	DrawArm();
-	//	glPopMatrix();
-	//	break;
-	//}
-	//default:
-	//	break;
-	//}
-	
 	//--------------------------------
 	//	End of OpenGL drawing
 	//--------------------------------

@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="arm.cpp" />
+    <ClCompile Include="hat.cpp" />
     <ClCompile Include="head.cpp" />
     <ClCompile Include="helperFunction.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="Animator.h" />
     <ClInclude Include="arm.h" />
+    <ClInclude Include="hat.h" />
     <ClInclude Include="head.h" />
     <ClInclude Include="helperFunction.h" />
     <ClInclude Include="InputManager.h" />

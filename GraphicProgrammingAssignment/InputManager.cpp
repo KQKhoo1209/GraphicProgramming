@@ -131,7 +131,7 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 			robot->GetWeapon()->SetSkin(SKIN_SLAUGHTER);
 		break;
 	case '4':
-		if (currentMode == ANIMATION_MODE || currentMode == CAMMOVEMENT_MODE) robot->ShowHat();
+		if (currentMode == ANIMATION_MODE || currentMode == ROBOTMOVEMENT_MODE) robot->ShowHat();
 		break;
 	case VK_ESCAPE:
 		PostQuitMessage(0);

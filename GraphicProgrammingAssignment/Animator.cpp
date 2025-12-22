@@ -29,6 +29,7 @@ void Animator::AnimUpdate(float deltaTime)
     {
         jumpPhase += deltaTime * 2.5f;
 
+        // Jump Animation Time = 3sec
         if (jumpPhase > 3.0f)
         {
             jumpPhase = 0.0f;
@@ -40,7 +41,8 @@ void Animator::AnimUpdate(float deltaTime)
     {
         knifePhase += deltaTime * 1.0f;
 
-        if (knifePhase > 3.0f)
+        // Knife Separate Animation Time = 5sec
+        if (knifePhase > 5.0f)
         {   
             knifePhase = 0.0f;
             state = IDLE_ANIM;
@@ -190,7 +192,7 @@ float Animator::GetKnifeScale(int index) const
     if (knifePhase < 2.5f) return 0.0f;
 
     float startSpawnTime = 2.5f;
-    float delay = index * 0.1f;
+    float delay = index * 0.15f;
     float t = knifePhase - startSpawnTime - delay;
 
     if (t <= 0.0f) return 0.0f;

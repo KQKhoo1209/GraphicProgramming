@@ -2,10 +2,20 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
+enum TorsoSkin
+{
+	TORSO_STEEL = 0,
+	TORSO_CRIMSON,
+	TORSO_BLUESTEEL
+};
+
 class torso
 {
 private:
 	GLUquadricObj* robotTorso;
+
+	TorsoSkin currentSkin;
+
 	float ringDotAngle;
 	float ringX;
 	float ringY;
@@ -16,6 +26,8 @@ private:
 public:
 	torso();   // constructor
 	~torso();  // destructor
+	void SetSkin(TorsoSkin skin);
+	GLuint GetBaseTorsoTexture();
 	void InitializeTorsoQuadratics();
 	void TorsoFrontPattern();
 	void TorsoBackPattern();

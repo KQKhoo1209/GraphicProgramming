@@ -118,17 +118,20 @@ void InputManager::HandleKeyDown(WPARAM wParam)
 		break;
 	case '1':
 		if (robot && robot->GetWeapon())
-			robot->GetWeapon()->SetSkin(SKIN_STEEL);
+			robot->GetWeapon()->SetSkin(SKIN_STEEL);	
+			robot->GetTorso()->SetSkin(TORSO_STEEL);	
 		break;
 
 	case '2':
 		if (robot && robot->GetWeapon())
 			robot->GetWeapon()->SetSkin(SKIN_CRIMSON);
+			robot->GetTorso()->SetSkin(TORSO_CRIMSON);
 		break;
 
 	case '3':
 		if (robot && robot->GetWeapon())
 			robot->GetWeapon()->SetSkin(SKIN_SLAUGHTER);
+			robot->GetTorso()->SetSkin(TORSO_BLUESTEEL);
 		break;
 	case '4':
 		if (currentMode == ANIMATION_MODE || currentMode == ROBOTMOVEMENT_MODE) robot->ShowHat();

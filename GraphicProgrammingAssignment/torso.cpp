@@ -93,6 +93,7 @@ void DrawCenterTriangleRing(int sides, float radius)
 torso::torso()
 {
     robotTorso = gluNewQuadric();
+    currentSkin = TORSO_STEEL;
     ringDotAngle = 0.0f;
     ringX = 0.0f;
     ringY = 0.0f;
@@ -417,9 +418,27 @@ void TorsoBottomPattern()
     glPopMatrix();
 }
 
+void torso::SetSkin(TorsoSkin skin)
+{
+    currentSkin = skin;
+}
+
+GLuint torso::GetBaseTorsoTexture()
+{
+    switch (currentSkin)
+    {
+    case TORSO_CRIMSON:
+        return crimsonWebTexture;
+    case TORSO_BLUESTEEL:
+        return blueSteelTexture;
+    default:
+        return steelTexture;
+    }
+}
+
 void torso::TorsoFront()
 {
-    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
+    glBindTexture(GL_TEXTURE_2D, GetBaseTorsoTexture());
     glPushMatrix();
     QuadNormal(
         -0.19f, 0.5f, 0.0f,
@@ -716,7 +735,7 @@ void torso::TorsoFront()
 
 void torso::TorsoUpper()
 {
-    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
+    glBindTexture(GL_TEXTURE_2D, GetBaseTorsoTexture());
     // Middle Upper
     glPushMatrix();
     glNormal3f(0.0f, 1.0f, 0.0f);
@@ -1169,7 +1188,7 @@ void torso::TorsoSide()
 
 void torso::TorsoBack()
 {
-    glBindTexture(GL_TEXTURE_2D, blueSteelTexture);
+    glBindTexture(GL_TEXTURE_2D, GetBaseTorsoTexture());
     // Left
     glPushMatrix();
     glNormal3f(0.0f, 0.0f, -1.0f);
@@ -1259,6 +1278,21 @@ void torso::middleCylinder()
 void torso::DrawTorso()
 {
     glEnable(GL_TEXTURE_2D);
+
+    switch (currentSkin)
+    {
+    case TORSO_CRIMSON:
+        glBindTexture(GL_TEXTURE_2D, crimsonWebTexture);
+        break;
+
+    case TORSO_BLUESTEEL:
+        glBindTexture(GL_TEXTURE_2D, slaughterTexture);
+        break;
+
+    default:
+        glBindTexture(GL_TEXTURE_2D, steelTexture);
+        break;
+    }
 
     glPushMatrix();
     middleCylinder();

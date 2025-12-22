@@ -11,6 +11,8 @@ GLuint whiteMetalTexture = 0;
 GLuint knifeTipTexture = 0;
 GLuint crimsonWebTexture = 0;
 GLuint slaughterTexture = 0;
+GLuint hatRedTexture = 0;
+GLuint hatWhiteTexture = 0;
 
 static BITMAP BMP;
 static HBITMAP hBMP = NULL;
@@ -168,6 +170,33 @@ void LoadTexture()
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
 		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	// Hat Red Texture
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"Asset/ChristmasHatRed.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BITMAP), &BMP);
+
+	glGenTextures(1, &hatRedTexture);
+	glBindTexture(GL_TEXTURE_2D, hatRedTexture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	// Hat White Texture
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"Asset/ChristmasHatWhite.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BITMAP), &BMP);
+	glGenTextures(1, &hatWhiteTexture);
+	glBindTexture(GL_TEXTURE_2D, hatWhiteTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 }
 
 void ReleaseTexture()
@@ -203,4 +232,20 @@ void ReleaseTexture()
 	glDisable(GL_TEXTURE_2D);
 	DeleteObject(hBMP);
 	glDeleteTextures(1, &knifeTipTexture);
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &crimsonWebTexture);
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &slaughterTexture);
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &hatRedTexture);
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &hatWhiteTexture);
 }

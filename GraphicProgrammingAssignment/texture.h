@@ -17,6 +17,8 @@ extern GLuint crimsonWebTexture;
 extern GLuint slaughterTexture;
 extern GLuint hatRedTexture;
 extern GLuint hatWhiteTexture;
+extern GLuint monitorTexture;
+extern GLuint energyTexture;
 
 void LoadTexture();
 void ReleaseTexture();

@@ -13,6 +13,8 @@ GLuint crimsonWebTexture = 0;
 GLuint slaughterTexture = 0;
 GLuint hatRedTexture = 0;
 GLuint hatWhiteTexture = 0;
+GLuint monitorTexture = 0;
+GLuint energyTexture = 0;
 
 static BITMAP BMP;
 static HBITMAP hBMP = NULL;
@@ -197,6 +199,31 @@ void LoadTexture()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
 		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	// Monitor Texture
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"Asset/Monitor.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BITMAP), &BMP);
+	glGenTextures(1, &monitorTexture);
+	glBindTexture(GL_TEXTURE_2D, monitorTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	// Energy Texture
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL),
+		"Asset/energy.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION |
+		LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BITMAP), &BMP);
+	glGenTextures(1, &energyTexture);
+	glBindTexture(GL_TEXTURE_2D, energyTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth,
+		BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+	
 }
 
 void ReleaseTexture()
@@ -248,4 +275,12 @@ void ReleaseTexture()
 	glDisable(GL_TEXTURE_2D);
 	DeleteObject(hBMP);
 	glDeleteTextures(1, &hatWhiteTexture);
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &monitorTexture);
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &energyTexture);
 }

@@ -420,7 +420,7 @@ void InputManager::UpdateRobotMovement()
 	{
 		robot->RotateRightFingers(0.1f, 3);
 	}
-	if (IsKeyPressed(VK_OEM_MINUS)) // [
+	if (IsKeyPressed(VK_OEM_4)) // [
 	{
 		robot->RotateRightThumb(-0.1f);
 	}

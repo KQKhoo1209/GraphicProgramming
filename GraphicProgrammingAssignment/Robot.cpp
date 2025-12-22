@@ -226,10 +226,14 @@ void Robot::StartSwingKnife()
     animator.SwingKnives();
 }
 
+void Robot::ShowHat()
+{
+    hasHat = !hasHat;
+}
+
 void Robot::DrawRobot()
 {
     bool isSpecialAnim = (animator.GetState() == KNIFE_SEP_ANIM);
-
     glPushMatrix();
 
     float jumpY = animator.GetJumpHeight();
@@ -257,6 +261,17 @@ void Robot::DrawRobot()
             glRotatef(headRotY, 0.0f, 1.0f, 0.0f);
             glRotatef(headRotZ + extraHeadRot, 1.0f, 0.0f, 0.0f);
             robotHead->DrawHead();
+
+			//Draw Hat
+            if (hasHat)
+            {
+                glPushMatrix();
+                glTranslatef(0.0f, 0.1f, 0.0f);
+                glScalef(0.5f, 0.5f, 0.5f);
+                glRotatef(-10.0f, 0.0f, 0.0f, 1.0f);
+                DrawHat();
+                glPopMatrix();
+            }
             glPopMatrix();
 
             if (isSpecialAnim && animator.GetKnifeScale(0) > 0.0f)

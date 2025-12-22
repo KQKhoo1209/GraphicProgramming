@@ -6,6 +6,7 @@
 #include "Weapon.h"
 #include "leg.h"
 #include "arm.h"
+#include "hat.h"
 
 class Robot
 {
@@ -25,6 +26,7 @@ private:
     float leftWristAngle, rightWristAngle;
     float leftFingerAngles[4], rightFingerAngles[4];
     float leftThumbAngle, rightThumbAngle;
+    bool hasHat;
 
     // For Knife Animation
     int knifeCount;
@@ -46,12 +48,13 @@ public:
     void RotateLeftElbow(float delta);
     void RotateRightElbow(float delta);
     void RotateLeftWrist(float delta);
-	void RotateRightWrist(float delta);
+    void RotateRightWrist(float delta);
     void RotateLeftFingers(float delta, int fingerIndex);
-	void RotateRightFingers(float delta, int fingerIndex);
+    void RotateRightFingers(float delta, int fingerIndex);
     void RotateLeftThumb(float delta);
-	void RotateRightThumb(float delta);
+    void RotateRightThumb(float delta);
     void ResetRotations();
+    void ShowHat();
 
     head* GetHead() { return robotHead; }
     torso* GetTorso() { return robotTorso; }
@@ -64,15 +67,20 @@ public:
     float GetHeadRotationZ() const { return headRotZ; }
     float GetTorsoRotationY() const { return torsoRotY; }
     float GetTorsoRotationZ() const { return torsoRotZ; }
-    float GetShoulderAngle() const { return shoulderAngle; }
-    float GetElbowAngle() const { return elbowAngle; }
-    float GetWristAngle() const { return wristAngle; }
-    float GetFingerAngles() const { return fingerAngle; }
-    float GetThumbAngle() const { return thumbAngle; }
+    float GetLeftShoulderAngle() const { return leftSwing; }
+    float GetLeftElbowAngle() const { return leftElbow; }
+    float GetLeftWristAngle() const { return leftWristAngle; }
+    float GetLeftThumbAngle() const { return leftThumbAngle; }
+    float GetLeftFingerAngle(int index) const { return leftFingerAngles[index];}
+    float GetRightShoulderAngle() const { return rightSwing; }
+    float GetRightElbowAngle() const { return rightElbow; }
+    float GetRightWristAngle() const { return rightWristAngle; }
+    float GetRightThumbAngle() const { return rightThumbAngle; }
+    float GetRightFingerAngle(int index) const { return rightFingerAngles[index]; }
 
     // Animation
     void Update(float deltaTime);
     void StartJump();
     void StartSpecialAnimation();
-	void StartSwingKnife();
+    void StartSwingKnife();
 };

@@ -73,6 +73,7 @@ void DrawCube()
     glEnd();
 }
 
+
 void DrawArmRing(int sides, float radius)
 {
     float angleStep = 360.0f / sides;
@@ -101,8 +102,15 @@ void DrawArmRing(int sides, float radius)
     }
 }
 
+void DrawForearmMonitor()
+{
+    glBindTexture(GL_TEXTURE_2D, monitorTexture);
+    DrawCube();
+}
+
 void DrawHand(const float* fingerAngles, float thumbAngle)
 {
+	GLUquadric* joint2 = gluNewQuadric();
     glPushMatrix();
 
     // ===== Palm=====
@@ -112,8 +120,19 @@ void DrawHand(const float* fingerAngles, float thumbAngle)
     DrawCube();
     glPopMatrix();
 
+    glPushMatrix();
+    glTranslatef(0.15f, -0.04f, 0.0f);
+    glBindTexture(GL_TEXTURE_2D, energyTexture);
+    gluQuadricTexture(joint2, true);
+    gluSphere(joint2, 0.05f, 16, 16);
+    glPopMatrix();
+   
+
     // ===== Fingers =====
     float fingerZ[4] = { 0.06f, 0.02f, -0.02f, -0.06f };
+    
+    glBindTexture(GL_TEXTURE_2D, whiteMetalTexture);
+
     for (int i = 0; i < 4; i++)
     {
         glPushMatrix();
@@ -124,6 +143,11 @@ void DrawHand(const float* fingerAngles, float thumbAngle)
         glTranslatef(0.04f, 0, 0);
         glScalef(0.08f, 0.025f, 0.025f);
         DrawCube();
+        glPopMatrix();
+
+        glPushMatrix();
+        glTranslatef(0.08f, 0, 0);
+        gluSphere(joint2, 0.012f, 8, 8);
         glPopMatrix();
 
         glTranslatef(0.08f, 0, 0);
@@ -149,6 +173,11 @@ void DrawHand(const float* fingerAngles, float thumbAngle)
     DrawCube();
     glPopMatrix();
 
+    glPushMatrix();
+    glTranslatef(0.08f, 0, 0);
+    gluSphere(joint2, 0.012f, 8, 8);
+    glPopMatrix();
+
     glTranslatef(0.08f, 0, 0);
     glRotatef(thumbAngle * 0.6f, 0, 0, 1);
     glPushMatrix();
@@ -160,6 +189,7 @@ void DrawHand(const float* fingerAngles, float thumbAngle)
     glPopMatrix();
 
     glPopMatrix();
+    gluDeleteQuadric(joint2);
 }
 
 void DrawArmSegment(float length, float thicknessY, float thicknessZ)
@@ -230,6 +260,12 @@ void DrawArm(float shoulderSwing, float shoulderRaise, float elbow, float wrist,
     // Forearm
     DrawArmSegment(0.45f, 0.11f, 0.09f);
     glTranslatef(0.45f, 0, 0);
+
+	glPushMatrix();
+    glTranslatef(-0.2f, 0.05f, 0.0f);
+    glScalef(0.25f, 0.05f, 0.05f);
+	DrawForearmMonitor();
+	glPopMatrix();
 
     // Wrist & Hand
     glPushMatrix();
